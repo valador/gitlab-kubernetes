@@ -1,0 +1,13 @@
+# registry['internal_key'] should contain the contents of the custom key
+# file. Line breaks in the key file should be marked using `\n` character
+# Example:
+registry['internal_key'] = "---BEGIN RSA PRIVATE KEY---\nMIIEpQIBAA\n"
+
+# Optionally define a custom file for Omnibus GitLab to write the contents
+# of registry['internal_key'] to.
+gitlab_rails['registry_key_path'] = "/custom/path/to/registry-key.key"
+
+registry_key_path std /var/opt/gitlab/gitlab-rails/etc/gitlab-registry.key
+
+
+/var/opt/gitlab/registry/gitlab-registry.crt

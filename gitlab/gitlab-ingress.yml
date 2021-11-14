@@ -1,0 +1,173 @@
+# https://github.com/danmanners/RKE-Learning-2/blob/master/Gitlab/ingress.yaml
+# https://github.com/vmarlier/kubernetized-gitlab/tree/master/terraform/configs
+# Ранер норм конфиг и трафик https://github.com/ArthurVardevanyan/HomeLab/tree/production/kubernetes/gitlab
+# https://github.com/RihardsT/cloud_project_kubernetes/tree/4e3f066c2f0a52214cd011adff5ca302f8f87d06/Traefik_v2
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: https-redirectscheme
+  namespace: gitlab
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: gitlab
+  namespace: gitlab
+spec:
+  entryPoints:
+    - websecure
+    - web
+  routes:
+    # - match: Host(`gitlab.dev-srv.home.lan`) && PathPrefix(`/admin/sidekiq`)
+    #   kind: Rule
+    #   services:
+    #     - name: gitlab-webservice-default
+    #       port: 80
+    - match: Host(`gitlab.dev-srv.home.lan`)
+      kind: Rule
+      services:
+        - name: gitlab-svc
+          namespace: gitlab
+          port: 80
+      # middlewares:
+      #   - name: https-redirectscheme
+      #     namespace: gitlab
+  tls:
+    secretName: root-secret
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: registry
+#   namespace: gitlab
+# spec:
+#   entryPoints:
+#     - websecure
+#     - web
+#   routes:
+#     - match: Host(`reg.dev-srv.home.lan`)
+#       kind: Rule
+#       services:
+#         - name: gitlab-svc
+#           namespace: gitlab
+#           port: 5005
+#       middlewares:
+#         - name: https-redirectscheme
+#           namespace: gitlab
+#   tls:
+#     secretName: root-secret
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: x-forwarded-for
+# spec:
+#   headers:
+#     hostsProxyHeaders: [ "X-Forwarded-For" ]
+---
+### GitLab Webservice
+# apiVersion: cert-manager.io/v1alpha2
+# kind: Certificate
+# metadata:
+#   name: gitlab-webservice-tls
+#   namespace: gitlab
+# spec:
+#   commonName: gitlab.dev-srv.home.lan
+#   secretName: gitlab-webservice-tls
+#   dnsNames:
+#     - gitlab.dev-srv.home.lan
+#   issuerRef:
+#     name: acme-prod
+#     kind: ClusterIssuer
+# ---
+# ### GitLab Minio
+# apiVersion: cert-manager.io/v1alpha2
+# kind: Certificate
+# metadata:
+#   name: gitlab-minio-tls
+#   namespace: gitlab
+# spec:
+#   commonName: minio.danmanners.io
+#   secretName: gitlab-minio-tls
+#   dnsNames:
+#     - minio.danmanners.io
+#   issuerRef:
+#     name: acme-prod
+#     kind: ClusterIssuer
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: minio
+# spec:
+#   entryPoints:
+#     - websecure
+#   routes:
+#     - match: Host(`minio.danmanners.io`)
+#       kind: Rule
+#       services:
+#         - name: gitlab-minio-svc
+#           port: 9000
+#   tls:
+#     secretName: gitlab-minio-tls
+---
+### GitLab Registry
+# apiVersion: cert-manager.io/v1alpha2
+# kind: Certificate
+# metadata:
+#   name: gitlab-registry-tls
+#   namespace: gitlab
+# spec:
+#   commonName: reg.dev-srv.home.lan
+#   secretName: gitlab-registry-tls
+#   dnsNames:
+#     - reg.dev-srv.home.lan
+#   issuerRef:
+#     name: acme-prod
+#     kind: ClusterIssuer
+---
+### GitLab Pages Wildcard
+# apiVersion: cert-manager.io/v1alpha2
+# kind: Certificate
+# metadata:
+#   name: gitlab-pages-tls
+#   namespace: gitlab
+# spec:
+#   commonName: "*.gitlab.dev-srv.home.lan"
+#   secretName: gitlab-pages-tls
+#   dnsNames:
+#     - "*.gitlab.dev-srv.home.lan"
+#   issuerRef:
+#     name: acme-prod
+#     kind: ClusterIssuer
+
+# TCP
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRouteTCP
+# metadata:
+#   name: gitlab-registry
+#   namespace: gitlab
+# spec:
+#   entryPoints:
+#     - registry
+#   routes:
+#     - match: "HostSNI(`gitlab.<URL>`)"
+#       services:
+#         - name: gitlab
+#           port: 5050
+#   tls:
+#     domains:
+#       - main: gitlab.<URL>
+#     passthrough: true
+# ---
+#             - "--entryPoints.traefik.address=:9000/tcp"
+#             - "--entryPoints.web.address=:8000/tcp"
+#             - "--entryPoints.websecure.address=:8443/tcp"
+#             - "--entryPoints.registry.address=:5050/tcp"
+# ---
