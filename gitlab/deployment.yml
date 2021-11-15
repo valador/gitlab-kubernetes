@@ -47,61 +47,15 @@ data:
     gitlab_rails['registry_issuer'] = "gitlab-issuer"
     # Нужен ключь в правильном формате
     gitlab_rails['internal_key'] = "/gitlab-reg-auth/auth.key"
-    # gitlab_rails['registry_key_path'] = "/gitlab-reg-auth/auth.key"
     registry_external_url 'https://reg.dev-srv.home.lan'
     registry_nginx['listen_port'] = 5005
     registry_nginx['listen_https'] = false
     registry['http_secret'] = "your-http-secret"
     registry_nginx['proxy_set_headers'] = {
-      "X-Real-IP" => "$remote_addr",
-      "X-Forwarded-For" => "$proxy_add_x_forwarded_for",
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
     }
 ---
-
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata:
-#   name: gitlab-reg-auth-vol
-#   namespace: gitlab
-#   labels:
-#     type: local
-#     app: gitlab
-#     tiers: registry
-# spec:
-#   capacity:
-#     storage: 1Gi
-#   accessModes:
-#     #- ReadOnlyMany
-#     - ReadWriteMany
-#   volumeMode: Filesystem
-#   persistentVolumeReclaimPolicy: Delete
-#   storageClassName: gitlab-reg-auth #Задаем имя класса хранилища
-#   hostPath:
-#     path: "/srv/gitlab"
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: gitlab-reg-auth-claim
-#   namespace: gitlab
-#   labels:
-#     app: gitlab
-# spec:
-#   accessModes:
-#     - ReadWriteMany
-#   volumeMode: Filesystem
-#   resources:
-#     requests:
-#       storage: 512Mi
-#   selector:
-#     matchLabels:
-#       app: gitlab
-#       tiers: registry
-#   storageClassName: gitlab-reg-auth
-
-# ---
 apiVersion: v1
 kind: Service
 metadata:
@@ -113,10 +67,6 @@ spec:
   selector:
     app: gitlab
   ports:
-    - name: https-web
-      protocol: "TCP"
-      port: 443
-      targetPort: 443
     - name: http-web
       protocol: "TCP"
       port: 80
@@ -175,8 +125,6 @@ spec:
           ports:
             - name: http-web
               containerPort: 80
-            - name: https-web
-              containerPort: 443
             - name: tcp-ssh
               containerPort: 32222
             - name: http-reg
@@ -189,19 +137,12 @@ spec:
           #     memory: 2500Mi
           #     cpu: 1100m
           volumeMounts:
-            # - name: gitlab-reg-auth
-            #   mountPath: /gitlab-reg-auth
-            - mountPath: /certs
-              name: auth-cert
             - mountPath: /reg-auth-cert
               name: reg-cert
       volumes:
         # - name: gitlab-reg-auth
         #   persistentVolumeClaim:
         #     claimName: gitlab-reg-auth-claim
-        - name: auth-cert
-          secret:
-            secretName: root-secret
         - name: reg-cert
           secret:
             secretName: gitlab-reg-auth
