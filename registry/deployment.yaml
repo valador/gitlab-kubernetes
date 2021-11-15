@@ -90,17 +90,17 @@ spec:
         #   mountPath: /gitlab-reg-auth
         # - mountPath: /var/lib/registry/
         #   name: data
-        - mountPath: /certs
-          name: auth-cert
+        # - mountPath: /certs
+        #   name: auth-cert
         - mountPath: /reg-auth-cert
           name: reg-cert
       volumes:
       # - name: gitlab-reg-auth
       #   persistentVolumeClaim:
       #     claimName: gitlab-reg-auth-readonly-claim
-      - name: auth-cert
-        secret:
-          secretName: root-secret
+      # - name: auth-cert
+      #   secret:
+      #     secretName: root-secret
       - name: reg-cert
         secret:
           secretName: gitlab-reg-auth

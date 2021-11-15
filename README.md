@@ -26,7 +26,7 @@
     sudo kubectl apply -f ./base/gitlab-admin-service-account.yaml
     ```
 
-5. Создаем ключь и сертификат для связи гитлаба с реестром, в таком формате опция gitlab_rails['internal_key'] его хавает
+5. Создаем ключь и сертификат для связи гитлаба с реестром, gitlab_rails['internal_key'] его хавает
 
     ```BASH
     openssl req -new -newkey rsa:4096 -subj "/CN=gitlab-issuer" -nodes -x509 -keyout ./registry/certs/auth.key -out ./registry/certs/auth.crt

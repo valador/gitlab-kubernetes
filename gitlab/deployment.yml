@@ -26,6 +26,8 @@ data:
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
     }
+    # Runner
+    gitlab_rails['initial_shared_runners_registration_token'] = "YrPPR6TUUv3AzRjAKLiB"
     # SSH
     gitlab_rails['gitlab_shell_ssh_port'] = 32222
     # DB
@@ -46,11 +48,10 @@ data:
     gitlab_rails['registry_api_url'] = "http://docker-registry-svc:5000"
     gitlab_rails['registry_issuer'] = "gitlab-issuer"
     # Нужен ключь в правильном формате
-    gitlab_rails['internal_key'] = "/gitlab-reg-auth/auth.key"
+    gitlab_rails['internal_key'] = "/reg-auth-cert/auth.key"
     registry_external_url 'https://reg.dev-srv.home.lan'
     registry_nginx['listen_port'] = 5005
     registry_nginx['listen_https'] = false
-    registry['http_secret'] = "your-http-secret"
     registry_nginx['proxy_set_headers'] = {
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
@@ -129,6 +130,26 @@ spec:
               containerPort: 32222
             - name: http-reg
               containerPort: 5005
+          # livenessProbe:
+          #   httpGet:
+          #     path: /help
+          #     port: http
+          #   # This pod takes a very long time to start up. Be cautious when
+          #   # lowering this value to avoid Pod death during startup.
+          #   initialDelaySeconds: 200
+          #   timeoutSeconds: 15
+          #   periodSeconds: 10
+          #   successThreshold: 1
+          #   failureThreshold: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /help
+          #     port: http-web
+          #   initialDelaySeconds: 60
+          #   timeoutSeconds: 1
+          #   periodSeconds: 10
+          #   successThreshold: 1
+          #   failureThreshold: 3
           # resources:
           #   limits:
           #     memory: 3000Mi
@@ -140,9 +161,6 @@ spec:
             - mountPath: /reg-auth-cert
               name: reg-cert
       volumes:
-        # - name: gitlab-reg-auth
-        #   persistentVolumeClaim:
-        #     claimName: gitlab-reg-auth-claim
         - name: reg-cert
           secret:
             secretName: gitlab-reg-auth
