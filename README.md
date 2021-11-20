@@ -1,6 +1,6 @@
 # gitlab-kubernetes
 
-## Порядок подготовки и установки
+## Порядок подготовки настройки и установки
 
 1. Установка менеджера сертификатов cert-manager
 
@@ -32,7 +32,25 @@
     openssl req -new -newkey rsa:4096 -subj "/CN=gitlab-issuer" -nodes -x509 -keyout ./registry/certs/auth.key -out ./registry/certs/auth.crt
     ```
 
-6. Запускаем Гитлаб
+    по идее можно использовать и домена ключь-сертификат
+
+6. Настройка
+    1. gitlab/omnibus-conf.yml
+       external_url - внешний адрес гитлаба
+       registry_external_url - внешний адрес registry
+       db_username - имя пользователя DB
+       db_password - пароль пользователя DB
+       db_database - имя базы данных
+       initial_shared_runners_registration_token - токен для раннеров
+       initial_root_password - пароль пользователя root
+    2. gitlab/pv.yml
+       в nodeAffinity - values - прописываем имя ноды где будет крутится гитлаб
+       local - path - путь для монтирования gitlab_data
+       persistentVolumeReclaimPolicy: Retain - файлы будут сохранены после удаления PV, Delete - удалены
+    3. gitlab/ingress.yml
+       настраиваем адреса
+
+99. Запускаем Гитлаб
 
     ```BASH
     make gitlab-up

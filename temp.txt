@@ -1,6 +1,0 @@
-docker login reg.dev-srv.home.lan -u root -p 
-
-
-
--t reg.dev-srv.home.lan/root/kaniko
-

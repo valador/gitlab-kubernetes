@@ -1,128 +1,26 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: gitlab-omnibus
-  namespace: gitlab
-  labels:
-    app: gitlab
-data:
-  gitlab_omnibus_config: |
-    # Components
-    gitlab_rails['ldap_enabled'] = false
-    prometheus['monitor_kubernetes'] = false
-    prometheus_monitoring['enable'] = false
-    prometheus['enable'] = false
-    grafana['enable'] = false
-    letsencrypt['enable'] = false
-    postgresql['enable'] = false
-    redis['enable'] = false
-    # Base
-    external_url "https://gitlab.dev-srv.home.lan"
-    nginx['enable'] = true
-    nginx['listen_port'] = 80
-    nginx['listen_https'] = false
-    nginx['proxy_set_headers'] = {
-      'X-Forwarded-Proto' => 'https',
-      'X-Forwarded-Ssl' => 'on'
-    }
-    # Runner
-    gitlab_rails['initial_shared_runners_registration_token'] = "YrPPR6TUUv3AzRjAKLiB"
-    # SSH
-    gitlab_rails['gitlab_shell_ssh_port'] = 32222
-    # DB
-    gitlab_rails['db_username'] = "gitlab"
-    gitlab_rails['db_password'] = "gitlab"
-    gitlab_rails['db_host'] = "postgresql-svc"
-    gitlab_rails['db_port'] = "5432"
-    gitlab_rails['db_database'] = "gitlab_home_dev"
-    gitlab_rails['db_adapter'] = 'postgresql'
-    gitlab_rails['db_encoding'] = 'utf8'
-    # ROOT password
-    gitlab_rails['initial_root_password'] = "secret_pass"
-    # Redis
-    gitlab_rails['redis_host'] = 'redis-svc'
-    gitlab_rails['redis_port'] = '6379'
-    # Registry
-    gitlab_rails['registry_enabled'] = true
-    gitlab_rails['registry_api_url'] = "http://docker-registry-svc:5000"
-    gitlab_rails['registry_issuer'] = "gitlab-issuer"
-    # Нужен ключь в правильном формате
-    gitlab_rails['internal_key'] = "/reg-auth-cert/auth.key"
-    registry_external_url 'https://reg.dev-srv.home.lan'
-    registry_nginx['listen_port'] = 5005
-    registry_nginx['listen_https'] = false
-    registry_nginx['proxy_set_headers'] = {
-      'X-Forwarded-Proto' => 'https',
-      'X-Forwarded-Ssl' => 'on'
-    }
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: gitlab-svc
-  namespace: gitlab
-  labels:
-    app: gitlab
-spec:
-  selector:
-    app: gitlab
-  ports:
-    - name: http-web
-      protocol: "TCP"
-      port: 80
-      targetPort: 80
-    - name: http-reg
-      protocol: "TCP"
-      port: 5005
-      targetPort: 5005
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: gitlab-ssh-svc
-  namespace: gitlab
-  labels:
-    app: gitlab-ssh
-spec:
-  selector:
-    app: gitlab
-  ports:
-    - name: ssh
-      protocol: "TCP"
-      port: 32222
-      targetPort: 22
-  type: ClusterIP
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  namespace: gitlab
   name: gitlab
-  labels:
-    app: gitlab
+  namespace: gitlab
 spec:
-  replicas: 1
-  revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: gitlab
+      app: gitlab # has to match .spec.template.metadata.labels
+  serviceName: "gitlab-svc"
+  replicas: 1 # by default is 1
   template:
     metadata:
       labels:
-        app: gitlab
+        app: gitlab # has to match .spec.selector.matchLabels
     spec:
+      terminationGracePeriodSeconds: 10
+      # securityContext:
+      #   fsGroup: 998
       containers:
         - name: gitlab
           image: gitlab/gitlab-ce:14.4.2-ce.0
           imagePullPolicy: IfNotPresent
-          env:
-            - name: GITLAB_OMNIBUS_CONFIG
-              valueFrom:
-                configMapKeyRef:
-                  name: gitlab-omnibus
-                  key: gitlab_omnibus_config
           ports:
             - name: http-web
               containerPort: 80
@@ -130,6 +28,12 @@ spec:
               containerPort: 32222
             - name: http-reg
               containerPort: 5005
+          env:
+            - name: GITLAB_OMNIBUS_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: gitlab-omnibus
+                  key: gitlab_omnibus_config
           # livenessProbe:
           #   httpGet:
           #     path: /help
@@ -150,17 +54,22 @@ spec:
           #   periodSeconds: 10
           #   successThreshold: 1
           #   failureThreshold: 3
-          # resources:
-          #   limits:
-          #     memory: 3000Mi
-          #     cpu: 1200m
-          #   requests:
-          #     memory: 2500Mi
-          #     cpu: 1100m
+          resources:
+            limits:
+              memory: 3000Mi
+              cpu: 1200m
+            requests:
+              memory: 2000Mi
+              cpu: 1000m
           volumeMounts:
-            - mountPath: /reg-auth-cert
-              name: reg-cert
+            - name: reg-cert
+              mountPath: /reg-auth-cert
+            - name: gitlab-data
+              mountPath: /var/opt/gitlab
       volumes:
         - name: reg-cert
           secret:
             secretName: gitlab-reg-auth
+        - name: gitlab-data
+          persistentVolumeClaim:
+            claimName: gitlab-data-pvc
