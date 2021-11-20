@@ -1,14 +1,14 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: gitlab-data-storage
+  name: postgres-data-storage
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: gitlab-data-pv
+  name: postgres-data-pv
   namespace: gitlab
 spec:
   capacity:
@@ -17,9 +17,9 @@ spec:
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: gitlab-data-storage
+  storageClassName: postgres-data-storage
   local:
-    path: /mnt/data_store/gitlab/gitlab_data
+    path: /mnt/data_store/gitlab/postgres_data
   nodeAffinity:
     required:
       nodeSelectorTerms:

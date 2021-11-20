@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-svc
+  namespace: gitlab
+  labels:
+    app: postgresql
+spec:
+  selector:
+    app: postgresql
+  ports:
+  - name: postgres
+    protocol: TCP
+    port: 5432
+    targetPort: 5432
+  #clusterIP: None
+  #type: LoadBalancer
+    # tier: postgreSQL
+  type: ClusterIP

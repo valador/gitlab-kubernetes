@@ -71,14 +71,17 @@ spec:
           ports:
             - containerPort: 6379
               name: redis
-      #     volumeMounts:
-      #       - name: redis
-      #         mountPath: /data
-      #         #subPath: redis_data
-      #       - name: redis
-      #         mountPath: /var/lib/redis
-      #         #subPath: lib_redis
-      # volumes:
-      #   - name: redis
-      #     persistentVolumeClaim:
-      #       claimName: redis-claim
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: 500m
+            requests:
+              memory: 256Mi
+              cpu: 200m
+          volumeMounts:
+            - name: redis
+              mountPath: /var/lib/redis
+      volumes:
+        - name: redis
+          persistentVolumeClaim:
+            claimName: redis-pvc

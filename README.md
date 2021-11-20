@@ -49,6 +49,8 @@
        persistentVolumeReclaimPolicy: Retain - файлы будут сохранены после удаления PV, Delete - удалены
     3. gitlab/ingress.yml
        настраиваем адреса
+    4. postgres/deployment.yaml
+       настраиваем POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
 
 99. Запускаем Гитлаб
 
