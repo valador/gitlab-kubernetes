@@ -54,13 +54,13 @@ spec:
           #   periodSeconds: 10
           #   successThreshold: 1
           #   failureThreshold: 3
-          resources:
-            limits:
-              memory: 3000Mi
-              cpu: 1200m
-            requests:
-              memory: 2000Mi
-              cpu: 1000m
+          # resources:
+          #   limits:
+          #     memory: 3000Mi
+          #     # cpu: 800m
+          #   requests:
+          #     memory: 2000Mi
+          #     # cpu: 600m
           volumeMounts:
             - name: reg-cert
               mountPath: /reg-auth-cert

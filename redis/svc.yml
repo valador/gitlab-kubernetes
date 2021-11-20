@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-svc
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  ports:
+    - name: redis
+      protocol: "TCP"
+      port: 6379
+      targetPort: 6379
+  selector:
+    app: redis

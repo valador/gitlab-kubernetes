@@ -11,12 +11,12 @@ help:
 gitlab-up:
 	# GITLAB
 	sudo mkdir -p /mnt/data_store/gitlab/gitlab_data/
-	sudo kubectl apply -f ./gitlab/pv.yml
 	sudo kubectl apply -f ./gitlab/pvc.yml
+	sudo kubectl apply -f ./gitlab/pv.yml
 	sudo kubectl apply -f ./gitlab/omnibus-conf.yml
 	sudo kubectl apply -f ./gitlab/svc.yml
-	sudo kubectl apply -f ./gitlab/deployment.yml
 	sudo kubectl apply -f ./gitlab/ingress.yml
+	sudo kubectl apply -f ./gitlab/deployment.yml
 	# Database
 	sudo mkdir -p /mnt/data_store/gitlab/postgres_data
 	sudo kubectl apply -f ./postgres/pv.yml
@@ -53,13 +53,12 @@ gitlab-down:
 	sudo kubectl delete -f ./redis/pv.yml
 	sudo kubectl delete -f ./redis/svc.yml
 	# Registry
+	sudo kubectl delete -f ./registry/deployment.yaml
 	sudo kubectl delete -f ./registry/pvc.yml
 	sudo kubectl delete -f ./registry/svc.yml
 	sudo kubectl delete -f ./registry/pv.yml
-	sudo kubectl delete -f ./registry/deployment.yaml
 gitlab-purge:
-	rm -rf /mnt/data_store/gitlab/gitlab_data
-	rm -rf /mnt/data_store/gitlab/postgres_data
+	sudo rm -rf /mnt/data_store/gitlab
 .PHONY: gitlab-runner-up gitlab-runner-down
 gitlab-runner-up:
 	sudo kubectl apply -f ./runner/deployment.yml
