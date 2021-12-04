@@ -57,3 +57,25 @@
     ```BASH
     make gitlab-up
     ```
+
+mountpoint
+└── gitlab-data
+    ├── builds
+    ├── git-data
+    ├── shared
+    └── uploads
+
+---
+  mountOptions:
+    - hard
+    - timeo=600
+    - retrans=3
+    - proto=tcp
+    - nfsvers=4.2
+    - port=2050
+    - rsize=4096
+    - wsize=4096
+    - noacl
+    - nocto
+    - noatime
+    - nodiratime

@@ -25,6 +25,14 @@ data:
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
     }
+    # Backup
+    gitlab_rails['backup_path'] = '/mnt/backups'
+    gitlab_rails['backup_keep_time'] = 604800
+    # DataDirs
+    git_data_dirs({"default" => { "path" => "/gitlab-data/git-data"} })
+    gitlab_rails['uploads_directory'] = '/gitlab-data/uploads'
+    gitlab_rails['shared_path'] = '/gitlab-data/shared'
+    gitlab_ci['builds_directory'] = '/gitlab-data/builds'
     # Runner
     gitlab_rails['initial_shared_runners_registration_token'] = "YrPPR6TUUv3AzRjAKLiB"
     # SSH

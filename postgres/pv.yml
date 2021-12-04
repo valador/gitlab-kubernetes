@@ -1,10 +1,33 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: postgres-data-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
----
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: postgres-data-storage
+# provisioner: kubernetes.io/no-provisioner
+# volumeBindingMode: WaitForFirstConsumer
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: postgres-data-pv
+#   namespace: gitlab
+# spec:
+#   capacity:
+#     storage: 10Gi
+#   volumeMode: Filesystem
+#   accessModes:
+#   - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: postgres-data-storage
+#   local:
+#     path: /mnt/data_store/gitlab/postgres_data
+#   nodeAffinity:
+#     required:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#         - key: kubernetes.io/hostname
+#           operator: In
+#           values:
+#           - dev-srv # имя НОДЫ а не пода
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -12,19 +35,13 @@ metadata:
   namespace: gitlab
 spec:
   capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
+    storage: 5Gi
   accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
+    - ReadWriteMany
   storageClassName: postgres-data-storage
-  local:
-    path: /mnt/data_store/gitlab/postgres_data
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - dev-srv # имя НОДЫ а не пода
+  nfs:
+    server: dev-srv
+    path: "/gitlab/postgres_data"
+  mountOptions:
+    - nfsvers=4.2
+  persistentVolumeReclaimPolicy: Retain

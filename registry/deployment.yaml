@@ -14,6 +14,10 @@ spec:
       labels:
         app: docker-registry
     spec:
+      securityContext:
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
       terminationGracePeriodSeconds: 30
       containers:
       - name: docker-registry
@@ -62,8 +66,12 @@ spec:
         # - name: REGISTRY_REDIS_PASSWORD
         #   value: redispass
         ports:
-        - containerPort: 5000
-          protocol: TCP
+          - containerPort: 5000
+            protocol: TCP
+        securityContext:
+          capabilities:
+            add: 
+              - SYS_ADMIN
         # livenessProbe:
         #   failureThreshold: 3
         #   httpGet:

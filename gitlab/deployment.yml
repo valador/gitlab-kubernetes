@@ -15,8 +15,10 @@ spec:
         app: gitlab # has to match .spec.selector.matchLabels
     spec:
       terminationGracePeriodSeconds: 10
-      # securityContext:
-      #   fsGroup: 998
+      securityContext:
+        # runAsUser: 1000
+        # runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: gitlab
           image: gitlab/gitlab-ce:14.4.2-ce.0
@@ -34,6 +36,10 @@ spec:
                 configMapKeyRef:
                   name: gitlab-omnibus
                   key: gitlab_omnibus_config
+          securityContext:
+            capabilities:
+              add: 
+                - SYS_ADMIN
           # livenessProbe:
           #   httpGet:
           #     path: /help
@@ -64,12 +70,33 @@ spec:
           volumeMounts:
             - name: reg-cert
               mountPath: /reg-auth-cert
-            - name: gitlab-data
-              mountPath: /var/opt/gitlab
+            - name: gitlab-etc
+              mountPath: /etc/gitlab
+            - name: gitlab-git-data
+              mountPath: /gitlab-data/git-data
+            - name: gitlab-uploads-data
+              mountPath: /gitlab-data/uploads
+            - name: gitlab-shared-data
+              mountPath: /gitlab-data/shared
+            - name: gitlab-builds-data
+              mountPath: /gitlab-data/builds
       volumes:
         - name: reg-cert
           secret:
             secretName: gitlab-reg-auth
-        - name: gitlab-data
+        - name: gitlab-etc
           persistentVolumeClaim:
-            claimName: gitlab-data-pvc
+            claimName: gitlab-etc-pvc
+        - name: gitlab-git-data
+          persistentVolumeClaim:
+            claimName: gitlab-git-data-pvc
+        - name: gitlab-uploads-data
+          persistentVolumeClaim:
+            claimName: gitlab-uploads-data-pvc
+        - name: gitlab-shared-data
+          persistentVolumeClaim:
+            claimName: gitlab-shared-data-pvc
+        - name: gitlab-builds-data
+          persistentVolumeClaim:
+            claimName: gitlab-builds-data-pvc
+        

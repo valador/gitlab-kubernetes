@@ -1,30 +1,134 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: gitlab-data-storage
+# provisioner: kubernetes.io/no-provisioner
+# volumeBindingMode: WaitForFirstConsumer
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: gitlab-data-pv
+#   namespace: gitlab
+# spec:
+#   capacity:
+#     storage: 10Gi
+#   volumeMode: Filesystem
+#   accessModes:
+#   - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: gitlab-data-storage
+#   local:
+#     path: /mnt/data_store/gitlab/gitlab_data
+#   nodeAffinity:
+#     required:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#         - key: kubernetes.io/hostname
+#           operator: In
+#           values:
+#           - dev-srv # имя НОДЫ а не пода
+apiVersion: v1
+kind: PersistentVolume
 metadata:
-  name: gitlab-data-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
+  name: gitlab-etc-pv
+  namespace: gitlab
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: gitlab-etc-storage
+  nfs:
+    server: dev-srv
+    path: "/gitlab/gitlab_etc"
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - rsize=1048576
+    - wsize=1048576
+    - noatime
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: gitlab-data-pv
+  name: gitlab-git-data-pv
   namespace: gitlab
 spec:
   capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
+    storage: 5Gi
   accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: gitlab-data-storage
-  local:
-    path: /mnt/data_store/gitlab/gitlab_data
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - dev-srv # имя НОДЫ а не пода
+    - ReadWriteMany
+  storageClassName: gitlab-git-data-storage
+  nfs:
+    server: dev-srv
+    path: "/gitlab/gitlab_git_data"
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - rsize=1048576
+    - wsize=1048576
+    - noatime
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitlab-uploads-data-pv
+  namespace: gitlab
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: gitlab-uploads-data-storage
+  nfs:
+    server: dev-srv
+    path: "/gitlab/gitlab_uploads_data"
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - rsize=1048576
+    - wsize=1048576
+    - noatime
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitlab-shared-data-pv
+  namespace: gitlab
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: gitlab-shared-data-storage
+  nfs:
+    server: dev-srv
+    path: "/gitlab/gitlab_shared_data"
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - rsize=1048576
+    - wsize=1048576
+    - noatime
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitlab-builds-data
+  namespace: gitlab
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: gitlab-builds-data-storage
+  nfs:
+    server: dev-srv
+    path: "/gitlab/gitlab_builds_data"
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - rsize=1048576
+    - wsize=1048576
+    - noatime

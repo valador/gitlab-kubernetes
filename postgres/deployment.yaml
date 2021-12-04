@@ -16,7 +16,9 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
       # securityContext:
-      #   fsGroup: 998
+      #   # runAsUser: 1000
+      #   # runAsGroup: 1000
+      #   fsGroup: 1000
       containers:
       - name: postgresql
         image: postgres:12-alpine
@@ -30,6 +32,10 @@ spec:
             value: gitlab_home_dev
           - name: POSTGRES_PASSWORD
             value: gitlab
+        securityContext:
+          capabilities:
+            add: 
+              - SYS_ADMIN
         volumeMounts:
           - name: postgres-data
             mountPath: /var/lib/postgresql/data

@@ -1,12 +1,69 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: gitlab-data-pvc
+  name: gitlab-etc-pvc
   namespace: gitlab
 spec:
   accessModes:
-    - ReadWriteOnce
+    # - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 5Gi
-  storageClassName: gitlab-data-storage
+      storage: 500Mi
+  storageClassName: gitlab-etc-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-git-data-pvc
+  namespace: gitlab
+spec:
+  accessModes:
+    # - ReadWriteOnce
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: gitlab-git-data-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-uploads-data-pvc
+  namespace: gitlab
+spec:
+  accessModes:
+    # - ReadWriteOnce
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: gitlab-uploads-data-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-shared-data-pvc
+  namespace: gitlab
+spec:
+  accessModes:
+    # - ReadWriteOnce
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: gitlab-shared-data-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-builds-data-pvc
+  namespace: gitlab
+spec:
+  accessModes:
+    # - ReadWriteOnce
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: gitlab-builds-data-storage

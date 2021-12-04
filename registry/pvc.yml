@@ -5,8 +5,9 @@ metadata:
   namespace: gitlab
 spec:
   accessModes:
-    - ReadWriteOnce
+    # - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 5Gi
+      storage: 4Gi
   storageClassName: registry-data-storage
