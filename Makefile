@@ -8,17 +8,21 @@ help:
 .PHONY: gitlab-nfs-mkdir
 gitlab-nfs-mkdir:
 	# Gitlab
+	# sudo mkdir -p /mnt/nfs-store/gitlab
 	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_etc
 	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_git_data
 	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_uploads_data
 	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_shared_data
 	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_builds_data
+	# sudo chown slayer:slayer -R /mnt/nfs-store/gitlab
+	# 777 ближе но все равно не то
+	# sudo chmod 777 -R /mnt/nfs-store/gitlab
 	# Postgres
-	sudo mkdir -p /mnt/nfs-store/gitlab/postgres_data
+	# sudo mkdir -p /mnt/nfs-store/gitlab/postgres_data
 	# Redis
-	sudo mkdir -p /mnt/nfs-store/gitlab/redis_data
+	# sudo mkdir -p /mnt/nfs-store/gitlab/redis_data
 	# Registry
-	sudo mkdir -p /mnt/nfs-store/gitlab/registry_data
+	# sudo mkdir -p /mnt/nfs-store/gitlab/registry_data
 # base gitlab installation
 .PHONY: gitlab-up gitlab-down gitlab-purge
 gitlab-up: gitlab-nfs-mkdir

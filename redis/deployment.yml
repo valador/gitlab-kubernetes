@@ -16,10 +16,10 @@ spec:
       labels:
         app: redis
     spec:
-      securityContext:
-        runAsUser: 65534
-        runAsGroup: 65534
-        fsGroup: 65534
+      # securityContext:
+      #   runAsUser: 65534
+      #   runAsGroup: 65534
+      #   fsGroup: 65534
       containers:
         - image: redis:6.2-rc3-alpine
           name: redis

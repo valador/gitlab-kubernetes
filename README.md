@@ -79,3 +79,9 @@ mountpoint
     - nocto
     - noatime
     - nodiratime
+
+sudo vi /etc/exports
+sudo exportfs -arv
+
+SELinux
+chcon -Rt svirt_sandbox_file_t /path/to/volume
