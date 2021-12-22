@@ -40,8 +40,8 @@ spec:
     - ReadWriteMany
   storageClassName: postgres-data-storage
   nfs:
-    server: dev-srv
+    server: 10.43.232.3
     path: "/gitlab/postgres_data"
   mountOptions:
-    - nfsvers=4.2
+    - nfsvers=4
   persistentVolumeReclaimPolicy: Retain

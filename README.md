@@ -30,6 +30,7 @@
 
     ```BASH
     openssl req -new -newkey rsa:4096 -subj "/CN=gitlab-issuer" -nodes -x509 -keyout ./registry/certs/auth.key -out ./registry/certs/auth.crt
+    sudo kubectl apply -k ./registry/certs
     ```
 
     по идее можно использовать и домена ключь-сертификат
@@ -85,3 +86,23 @@ sudo exportfs -arv
 
 SELinux
 chcon -Rt svirt_sandbox_file_t /path/to/volume
+
+```bash
+docker login reg.dev-srv.home.lan -u root -p RWmU2tvg2VW6689msL6H
+```
+
+### Добавляем самоподписанный сертификат в клиентскую систему
+
+```bash
+sudo kubectl -n gitlab get secret root-secret -o json | jq -r '.data["tls.crt"]' | base64 -d > ca.crt
+sudo mkdir -p /etc/docker/certs.d/reg.dev-srv.home.lan
+sudo cp ca.crt /etc/docker/certs.d/reg.dev-srv.home.lan/ca.crt
+sudo cp ca.crt /usr/local/share/ca-certificates/ca.crt
+sudo update-ca-certificates
+```
+docker push reg.dev-srv.home.lan/root/kaniko-project
+docker build -t reg.dev-srv.home.lan/root/kaniko-project .
+[Service]
+Environment="HTTP_PROXY=http://136.144.54.195:10010"
+Environment="HTTPS_PROXY=http://50.205.73.210:3128"
+Environment="NO_PROXY=localhost,127.0.0.1,.lan"

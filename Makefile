@@ -18,11 +18,11 @@ gitlab-nfs-mkdir:
 	# 777 ближе но все равно не то
 	# sudo chmod 777 -R /mnt/nfs-store/gitlab
 	# Postgres
-	# sudo mkdir -p /mnt/nfs-store/gitlab/postgres_data
+	sudo mkdir -p /mnt/nfs-store/gitlab/postgres_data
 	# Redis
-	# sudo mkdir -p /mnt/nfs-store/gitlab/redis_data
+	sudo mkdir -p /mnt/nfs-store/gitlab/redis_data
 	# Registry
-	# sudo mkdir -p /mnt/nfs-store/gitlab/registry_data
+	sudo mkdir -p /mnt/nfs-store/gitlab/registry_data
 # base gitlab installation
 .PHONY: gitlab-up gitlab-down gitlab-purge
 gitlab-up: gitlab-nfs-mkdir

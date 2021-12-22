@@ -11,6 +11,8 @@ spec:
   replicas: 1 # by default is 1
   template:
     metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/postgresql: localhost/nfs-mount-container
       labels:
         app: postgresql # has to match .spec.selector.matchLabels
     spec:
