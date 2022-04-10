@@ -40,7 +40,7 @@ spec:
     - ReadWriteMany
   storageClassName: redis-storage
   nfs:
-    server: 10.43.232.3
+    server: 10.43.85.189
     path: "/gitlab/redis_data"
   mountOptions:
     - nfsvers=4

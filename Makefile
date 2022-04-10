@@ -9,16 +9,20 @@ help:
 gitlab-nfs-mkdir:
 	# Gitlab
 	# sudo mkdir -p /mnt/nfs-store/gitlab
-	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_etc
-	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_git_data
-	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_uploads_data
-	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_shared_data
-	sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_builds_data
-	# sudo chown slayer:slayer -R /mnt/nfs-store/gitlab
+	# sudo chown nobody.nobody /mnt/nfs-store/gitlab
+	# sudo mkdir -p /mnt/nfs-store/gitlab
+	sudo mkdir -p /mnt/nfs-store/gitlab/{gitlab_etc,gitlab_git_data,gitlab_uploads_data,gitlab_shared_data,gitlab_builds_data}
+	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_etc
+	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_git_data
+	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_uploads_data
+	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_shared_data
+	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_builds_data
+	# sudo chown slayer:slayer -R /mnt/nfs-store/gitlab/gitlab_etc
 	# 777 ближе но все равно не то
-	# sudo chmod 777 -R /mnt/nfs-store/gitlab
+	# sudo chmod 777 /mnt/nfs-store/gitlab/gitlab_etc
 	# Postgres
 	sudo mkdir -p /mnt/nfs-store/gitlab/postgres_data
+	# sudo chown 70:70 /mnt/nfs-store/gitlab/postgres_data
 	# Redis
 	sudo mkdir -p /mnt/nfs-store/gitlab/redis_data
 	# Registry

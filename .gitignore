@@ -1,3 +1,5 @@
 TOKEN.txt
+registry/certs/auth.crt
+registry/certs/auth.key
 *.crt
 *.key

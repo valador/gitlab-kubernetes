@@ -11,16 +11,16 @@ spec:
   replicas: 1 # by default is 1
   template:
     metadata:
-      annotations:
-        container.apparmor.security.beta.kubernetes.io/postgresql: localhost/nfs-mount-container
+      # annotations:
+      #   container.apparmor.security.beta.kubernetes.io/postgresql: localhost/nfs-mount-container
       labels:
         app: postgresql # has to match .spec.selector.matchLabels
     spec:
       terminationGracePeriodSeconds: 10
       # securityContext:
-      #   # runAsUser: 1000
+      #   runAsUser: 70
       #   # runAsGroup: 1000
-      #   fsGroup: 1000
+      #   fsGroup: 70
       containers:
       - name: postgresql
         image: postgres:12-alpine
@@ -34,13 +34,17 @@ spec:
             value: gitlab_home_dev
           - name: POSTGRES_PASSWORD
             value: gitlab
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata
         securityContext:
           capabilities:
             add: 
               - SYS_ADMIN
         volumeMounts:
           - name: postgres-data
+            # subPath: pgdata
             mountPath: /var/lib/postgresql/data
+            readOnly: false
       volumes:
         - name: postgres-data
           persistentVolumeClaim:

@@ -11,19 +11,19 @@ spec:
   replicas: 1 # by default is 1
   template:
     metadata:
-      annotations:
-        container.apparmor.security.beta.kubernetes.io/gitlab: localhost/nfs-mount-container
+      # annotations:
+      #   container.apparmor.security.beta.kubernetes.io/gitlab: localhost/nfs-mount-container
       labels:
         app: gitlab # has to match .spec.selector.matchLabels
     spec:
       terminationGracePeriodSeconds: 10
-      # securityContext:
-      #   runAsUser: 1000
-      #   runAsGroup: 3000
-      #   fsGroup: 2000
+      securityContext:
+        runAsUser: 0
+        # runAsGroup: 1000
+        fsGroup: 0
       containers:
         - name: gitlab
-          image: gitlab/gitlab-ce:14.4.2-ce.0
+          image: gitlab/gitlab-ce:14.6.7-ce.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http-web
@@ -39,9 +39,10 @@ spec:
                   name: gitlab-omnibus
                   key: gitlab_omnibus_config
           securityContext:
-            capabilities:
-              add: 
-                - SYS_ADMIN
+            privileged: true
+            # capabilities:
+            #   add: 
+            #     - SYS_ADMIN
           # livenessProbe:
           #   httpGet:
           #     path: /help
