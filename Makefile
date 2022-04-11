@@ -19,7 +19,7 @@ gitlab-nfs-mkdir:
 	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_builds_data
 	# sudo chown slayer:slayer -R /mnt/nfs-store/gitlab/gitlab_etc
 	# 777 ближе но все равно не то
-	# sudo chmod 777 /mnt/nfs-store/gitlab/gitlab_etc
+	# sudo chmod -R 777 /mnt/nfs-store/gitlab/gitlab_etc
 	# Postgres
 	sudo mkdir -p /mnt/nfs-store/gitlab/postgres_data
 	# sudo chown 70:70 /mnt/nfs-store/gitlab/postgres_data
@@ -29,7 +29,7 @@ gitlab-nfs-mkdir:
 	sudo mkdir -p /mnt/nfs-store/gitlab/registry_data
 # base gitlab installation
 .PHONY: gitlab-up gitlab-down gitlab-purge
-gitlab-up: gitlab-nfs-mkdir
+gitlab-up:
 	# GITLAB
 	sudo kubectl apply -f ./gitlab/pvc.yml
 	sudo kubectl apply -f ./gitlab/pv.yml
@@ -84,14 +84,14 @@ gitlab-runner-down:
 .PHONY: get-all
 get-all:
 	sudo kubectl get all --all-namespaces
-.PHONY: gitlab-test-up gitlab-test-down
-gitlab-test-up: gitlab-nfs-mkdir
-	sudo kubectl apply -f ./gitlab/pvc.yml
-	sudo kubectl apply -f ./gitlab/pv.yml
-	sudo kubectl apply -f ./gitlab/omnibus-conf.yml
-	sudo kubectl apply -f ./gitlab/deployment.yml
-gitlab-test-down: gitlab-purge
-	sudo kubectl delete -f ./gitlab/deployment.yml
-	sudo kubectl delete -f ./gitlab/pvc.yml
-	sudo kubectl delete -f ./gitlab/pv.yml
-	sudo kubectl delete -f ./gitlab/omnibus-conf.yml
+# .PHONY: gitlab-test-up gitlab-test-down
+# gitlab-test-up: gitlab-nfs-mkdir
+# 	sudo kubectl apply -f ./gitlab/pvc.yml
+# 	sudo kubectl apply -f ./gitlab/pv.yml
+# 	sudo kubectl apply -f ./gitlab/omnibus-conf.yml
+# 	sudo kubectl apply -f ./gitlab/deployment.yml
+# gitlab-test-down: gitlab-purge
+# 	sudo kubectl delete -f ./gitlab/deployment.yml
+# 	sudo kubectl delete -f ./gitlab/pvc.yml
+# 	sudo kubectl delete -f ./gitlab/pv.yml
+# 	sudo kubectl delete -f ./gitlab/omnibus-conf.yml
