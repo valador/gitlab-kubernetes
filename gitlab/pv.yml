@@ -40,7 +40,7 @@ spec:
     - ReadWriteMany
   storageClassName: gitlab-etc-storage
   nfs:
-    server: 10.43.114.85
+    server: 10.43.134.89
     path: "/gitlab/gitlab_etc"
   mountOptions:
     - nfsvers=4.2
@@ -58,7 +58,7 @@ spec:
     - ReadWriteMany
   storageClassName: gitlab-git-data-storage
   nfs:
-    server: 10.43.114.85
+    server: 10.43.134.89
     path: "/gitlab/gitlab_git_data"
   mountOptions:
     - nfsvers=4.2
@@ -76,7 +76,7 @@ spec:
     - ReadWriteMany
   storageClassName: gitlab-uploads-data-storage
   nfs:
-    server: 10.43.114.85
+    server: 10.43.134.89
     path: "/gitlab/gitlab_uploads_data"
   mountOptions:
     - nfsvers=4.2
@@ -94,7 +94,7 @@ spec:
     - ReadWriteMany
   storageClassName: gitlab-shared-data-storage
   nfs:
-    server: 10.43.114.85
+    server: 10.43.134.89
     path: "/gitlab/gitlab_shared_data"
   mountOptions:
     - nfsvers=4.2
@@ -112,7 +112,7 @@ spec:
     - ReadWriteMany
   storageClassName: gitlab-builds-data-storage
   nfs:
-    server: 10.43.114.85
+    server: 10.43.134.89
     path: "/gitlab/gitlab_builds_data"
   mountOptions:
     - nfsvers=4.2

@@ -17,7 +17,7 @@ data:
     postgresql['enable'] = false
     redis['enable'] = false
     # Base
-    external_url "https://gitlab.dev-srv.home.lan"
+    external_url "http://gitlab.dev-srv.home.lan"
     nginx['enable'] = true
     nginx['listen_port'] = 80
     nginx['listen_https'] = false
@@ -56,7 +56,7 @@ data:
     gitlab_rails['registry_issuer'] = "gitlab-issuer"
     # Нужен ключь в правильном формате
     gitlab_rails['internal_key'] = "/reg-auth-cert/auth.key"
-    registry_external_url 'https://reg.dev-srv.home.lan'
+    registry_external_url 'http://reg.dev-srv.home.lan'
     registry_nginx['listen_port'] = 5005
     registry_nginx['listen_https'] = false
     registry_nginx['proxy_set_headers'] = {
