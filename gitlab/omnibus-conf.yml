@@ -54,8 +54,16 @@ data:
     gitlab_rails['registry_enabled'] = true
     gitlab_rails['registry_api_url'] = "http://docker-registry-svc:5000"
     gitlab_rails['registry_issuer'] = "gitlab-issuer"
+    # registry['internal_key'] = "-----BEGIN PRIVATE KEY-----\n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\n-----END PRIVATE KEY-----\n"
+    registry['internal_key'] = File.read("/reg-auth-cert/auth.key")
+    gitlab_rails['registry_host'] = "reg.dev-srv.home.lan"
+    # gitlab_rails['registry_port'] = "5005"
+    # Notification secret, it's used to authenticate notification requests to GitLab application
+    # You only need to change this when you use external Registry service, otherwise
+    # it will be taken directly from notification settings of your Registry
+    # gitlab_rails['registry_notification_secret'] = nil
     # Нужен ключь в правильном формате
-    gitlab_rails['internal_key'] = "/reg-auth-cert/auth.key"
+    # gitlab_rails['internal_key'] = "/reg-auth-cert/auth.key"
     registry_external_url 'http://reg.dev-srv.home.lan'
     registry_nginx['listen_port'] = 5005
     registry_nginx['listen_https'] = false
@@ -63,3 +71,15 @@ data:
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
     }
+    registry['notifications'] = [
+      {
+        'name' => 'registry_endpoint',
+        'url' => 'http://gitlab-svc/notify',
+        'timeout' => '500ms',
+        'threshold' => 5,
+        'backoff' => '1s',
+        'headers' => {
+          "Authorization" => ["UBER_TOKEN"]
+        }
+      }
+    ]

@@ -51,6 +51,7 @@ gitlab-up:
 	sudo kubectl apply -f ./registry/pv.yml
 	sudo kubectl apply -f ./registry/pvc.yml
 	sudo kubectl apply -f ./registry/svc.yml
+	sudo kubectl apply -f ./registry/notifications-conf.yml
 	sudo kubectl apply -f ./registry/deployment.yaml
 gitlab-down:
 	sudo kubectl delete -f ./gitlab/deployment.yml
@@ -71,6 +72,7 @@ gitlab-down:
 	sudo kubectl delete -f ./redis/svc.yml
 	# Registry
 	sudo kubectl delete -f ./registry/deployment.yaml
+	sudo kubectl delete -f ./registry/notifications-conf.yml
 	sudo kubectl delete -f ./registry/pvc.yml
 	sudo kubectl delete -f ./registry/svc.yml
 	sudo kubectl delete -f ./registry/pv.yml

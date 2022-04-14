@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-notify
+  namespace: gitlab
+  labels:
+    app:  docker-registry
+data:
+  registry_notifications: |
+    - name: registry_endpoint
+      url: http://gitlab-svc/notify
+      headers:
+        Authorization: [Bearer UBER_TOKEN]
+      timeout: 500ms
+      threshold: 5
+      backoff: 1s

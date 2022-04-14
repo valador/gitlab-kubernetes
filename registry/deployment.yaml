@@ -67,6 +67,12 @@ spec:
           value: "redis-svc:6379"
         # - name: REGISTRY_REDIS_PASSWORD
         #   value: redispass
+        # NOTIFICATIONS
+        - name: REGISTRY_NOTIFICATIONS_ENDPOINTS
+          valueFrom:
+            configMapKeyRef:
+              name: registry-notify
+              key: registry_notifications
         ports:
           - containerPort: 5000
             protocol: TCP
