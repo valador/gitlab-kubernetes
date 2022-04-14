@@ -30,7 +30,7 @@
    Работает конструкция вида registry['internal_key'] = File.read("/reg-auth-cert/auth.key")
 
     ```BASH
-    openssl req -new -newkey rsa:4096 -subj "/CN=gitlab-issuer" -nodes -x509 -keyout ./registry/certs/auth.key -out ./registry/certs/auth.crt
+    openssl req -new -newkey rsa:4096 -subj "/CN=gitlab-issuer" -nodes -x509 -keyout ./registry/certs/reg-auth.key -out ./registry/certs/reg-auth.crt
     sudo kubectl apply -k ./registry/certs
     ```
 

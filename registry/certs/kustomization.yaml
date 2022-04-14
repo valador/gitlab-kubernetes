@@ -4,7 +4,7 @@ namespace: gitlab
 secretGenerator:
 - name: gitlab-reg-auth
   files:
-  - auth.crt
-  - auth.key
+  - reg-auth.crt
+  - reg-auth.key
 generatorOptions:
   disableNameSuffixHash: true
