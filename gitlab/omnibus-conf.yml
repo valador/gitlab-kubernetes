@@ -18,19 +18,20 @@ data:
     redis['enable'] = false
     
     # Base
+    gitlab_rails['time_zone'] = 'Europe/Moscow'
     external_url "https://gitlab.dev-srv.home.lan"
     nginx['enable'] = true
     nginx['listen_port'] = 80
     nginx['listen_https'] = false
     # nginx['redirect_http_to_https'] = false
-    # nginx['proxy_set_headers'] = {
-    #   "X-Forwarded-Proto" => "http",
-    #   "CUSTOM_HEADER" => "VALUE"
-    # }
     nginx['proxy_set_headers'] = {
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
     }
+    # nginx['proxy_set_headers'] = {
+    #   "X-Forwarded-Proto" => "http",
+    #   "CUSTOM_HEADER" => "VALUE"
+    # }
     
     # Backup
     gitlab_rails['backup_path'] = '/mnt/backups'
@@ -65,15 +66,24 @@ data:
     gitlab_rails['redis_port'] = '6379'
     
     # Registry
+    # HTTPS addr need for work
+    # registry_external_url 'https://reg.dev-srv.home.lan'
     gitlab_rails['registry_enabled'] = true
     gitlab_rails['registry_api_url'] = "http://docker-registry-svc:5000"
     gitlab_rails['registry_issuer'] = "gitlab-issuer"
     registry['internal_key'] = File.read("/reg-auth-cert/reg-auth.key")
-
-    registry_external_url 'https://reg.dev-srv.home.lan'
-    registry_nginx['listen_port'] = 5005
+    # Store generated\added key for registry
+    gitlab_rails['registry_key_path'] = "/gitlab-data/gitlab-registry.key"
+    # gitlab_rails['internal_key'] = "/reg-auth-cert/reg-auth.key"
+    # For internal registry
+    #registry['internal_certificate'] = File.read("/reg-auth-cert/reg-auth.crt")
+    registry['enable'] = false
+    gitlab_rails['registry_host'] = "reg.dev-srv.home.lan"
+    # gitlab_rails['registry_port'] = "5005"
+    # registry_nginx['listen_port'] = 5005
     registry_nginx['listen_https'] = false
     # registry_nginx['redirect_http_to_https'] = false
+    # registry_nginx['enable'] = false
     registry_nginx['proxy_set_headers'] = {
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'

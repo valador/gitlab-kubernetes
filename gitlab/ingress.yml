@@ -47,7 +47,7 @@
 # spec:
 #   redirectScheme:
 #     scheme: https
-#     permanent: true
+#     permanent: false
 # ---
 # apiVersion: traefik.containo.us/v1alpha1
 # kind: Middleware
@@ -81,10 +81,13 @@ spec:
     - match: Host(`reg.dev-srv.home.lan`) && (PathPrefix(`/`))
       kind: Rule
       services:
-        - name: gitlab-svc
+        - name: docker-registry-svc
           namespace: gitlab
           kind: Service
-          port: 5005
+          port: 5000
+      # middlewares:
+      #   - name: https-redirectscheme
+      #     namespace: gitlab
   tls:
     secretName: root-secret
 # ---

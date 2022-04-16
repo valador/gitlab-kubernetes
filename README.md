@@ -89,7 +89,7 @@ SELinux
 chcon -Rt svirt_sandbox_file_t /path/to/volume
 
 ```bash
-docker login reg.dev-srv.home.lan -u root -p s2cEdWoy3vfgqcXNq-Qu
+docker login reg.dev-srv.home.lan -u root -p MJw7xHGBg4uxVB9sK7j6
 ```
 
 ### Добавляем самоподписанный сертификат в клиентскую систему
@@ -162,6 +162,6 @@ Command 3: curl -H "Authorization: Bearer ${TOKEN}" -X "DELETE" {$REGISTRY}v2/gr
 reg.dev-srv.home.lan
 curl --user 'root:secret_pass' 'https://gitlab.dev-srv.home.lan/jwt/auth?client_id=docker&offline_token=true&service=container_registry&scope=repository:gitlab-instance-e4525a73:push,pull'
 
-curl --user 'root:secret_pass' 'https://reg.dev-srv.home.lan/jwt/auth?client_id=docker&offline_token=true&service=container_registry&scope=repository:gitlab-instance-e4525a73:push,pull'
+curl --user 'root:secret_pass' 'http://gitlab-svc/jwt/auth?client_id=docker&offline_token=true&service=container_registry&scope=repository:gitlab-instance-e4525a73:push,pull'
 
 curl -vvv -H 'Accept: application/vnd.docker.distribution.manifest.v2+json' -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJHM0w6VUdLTDpONUNWOklINkU6MlBaUTpSUE82OlBMQ0I6TDdYRTpFN0lFOlZGS1M6WkdEMzpPRUxNIiwidHlwIjoiSldUIn0.eyJhY2Nlc3MiOltdLCJqdGkiOiJiODYxNjlhYS01NGM4LTQ2NjEtYWM5NS1hZTRiMDY3YzNiZDAiLCJhdWQiOiJjb250YWluZXJfcmVnaXN0cnkiLCJzdWIiOiJyb290IiwiaXNzIjoiZ2l0bGFiLWlzc3VlciIsImlhdCI6MTY1MDEyMDAxMywibmJmIjoxNjUwMTIwMDA4LCJleHAiOjE2NTAxMjAzMTN9.kWr5USopVKgs8Q1dASBw4lsFaA-X9QUkF9e_RWP6o9bm1rHKUS3zrLDafnCgeiTQho-2DHocAAAydR4mHl8HxR6glPh1iFeVaGXlOeiQhSJcdxj3cJTXkKQynjHCHq7k0AQKtlZRXkI4Z0qWlX5SXAVg1nPiElvm088tDb47SUFig_0bEdmzGKrJ1IOf_HhFRYhcszOD8v77-cblymjCbuAMeXHvHxWMXbgRQvDrAPThKZsvwxyAMjAWCPFokifST54ubfDbJJMyYYONHvbBP5lN061-EPbFLwWyhRwvwMuAHlUhc5vn6vfpXsDrbTZkeQ-nEIL7QsMYFOwZeNaBR8CgzoDOVRs1hiVdy0I_mv47xzw8gbbgdFwuY7w4WXaaAdzvPVxWX3aHzY1hvQMtVf-YEb9Rcgm4Zw3_5N7dd2s6PENAKb4pcr98GPjXzYVQ1Ei4ULzYqhMms1wRtn5G8kOTTzJzrRIHAQTuJB22D3a7bLWh442xXsoK8rlmmwjawVrQEqmawHE6HYk3yzjeob2f5Pb6P8JCAMLJTcLwE2Y7_RWPn2bUR4AIb6bEpU1NDKf8fttkBHAe4y_T-riHHBlyRCfZvQaSXZEsvw47g-DkWig2yeTmpFuRjqRH6a44Shx30slCBrjY79ci9IOBqjCFFhCjoigK894C1lHlpxo' https://gitlab.dev-srv.home.lan/v2/kaniko-project/tags/list
