@@ -39,6 +39,24 @@
 #         - "gitlab.dev-srv.home.lan"
 #         - "reg.dev-srv.home.lan"
 #       secretName: root-secret
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: https-redirectscheme
+#   namespace: gitlab
+# spec:
+#   redirectScheme:
+#     scheme: https
+#     permanent: true
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: x-forwarded-for
+# spec:
+#   headers:
+#     hostsProxyHeaders: [ "X-Forwarded-For" ]
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -57,6 +75,9 @@ spec:
           namespace: gitlab
           kind: Service
           port: 80
+      # middlewares:
+      #   - name: https-redirectscheme
+      #     namespace: gitlab
     - match: Host(`reg.dev-srv.home.lan`) && (PathPrefix(`/`))
       kind: Rule
       services:
@@ -66,3 +87,16 @@ spec:
           port: 5005
   tls:
     secretName: root-secret
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRouteTCP
+# metadata:
+#   name: gitlab-ssh-ing
+# spec:
+#   entryPoints:
+#     - ssh
+#   routes:
+#   - match: HostSNI(`gitlab.dev-srv.home.lan`)
+#     services:
+#     - name: gitlab-ssh-svc
+#       port: 22

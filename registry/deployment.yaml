@@ -36,13 +36,13 @@ spec:
         - name: REGISTRY_AUTH
           value: "token"
         - name: REGISTRY_AUTH_TOKEN_REALM
-          value: "http://gitlab-svc/jwt/auth"
+          value: "https://gitlab.dev-srv.home.lan/jwt/auth"
         - name: REGISTRY_AUTH_TOKEN_SERVICE
           value: "container_registry"
         - name: REGISTRY_AUTH_TOKEN_ISSUER
           value: "gitlab-issuer"
         - name: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
-          value: "/reg-auth-cert/auth.crt"
+          value: "/reg-auth-cert/reg-auth.crt"
         # Storage
         - name: REGISTRY_STORAGE_DELETE_ENABLED
           value: "true"
@@ -68,11 +68,11 @@ spec:
         # - name: REGISTRY_REDIS_PASSWORD
         #   value: redispass
         # NOTIFICATIONS
-        - name: REGISTRY_NOTIFICATIONS_ENDPOINTS
-          valueFrom:
-            configMapKeyRef:
-              name: registry-notify
-              key: registry_notifications
+        # - name: REGISTRY_NOTIFICATIONS_ENDPOINTS
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: registry-notify
+        #       key: registry_notifications
         ports:
           - containerPort: 5000
             protocol: TCP

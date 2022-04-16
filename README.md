@@ -2,10 +2,10 @@
 
 ## Порядок подготовки настройки и установки
 
-1. Установка менеджера сертификатов cert-manager
+1. 
 
     ```BASH
-    sudo kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml
+ 
     ```
 
 2. Создаем область имен
@@ -89,7 +89,7 @@ SELinux
 chcon -Rt svirt_sandbox_file_t /path/to/volume
 
 ```bash
-docker login reg.dev-srv.home.lan -u root -p KgyYGsEjMjuzA193zuxc
+docker login reg.dev-srv.home.lan -u root -p s2cEdWoy3vfgqcXNq-Qu
 ```
 
 ### Добавляем самоподписанный сертификат в клиентскую систему
@@ -135,4 +135,29 @@ Environment="NO_PROXY=localhost,127.0.0.1,.lan"
 ---
 
 https://github.com/RodrigoRosmaninho/projects-ect/tree/master/4th%20Year/%5BGIRS%5D%20Proj%20-%20Kubernetes%20Deployment%20of%20an%20HA%20Gitlab%20instance
+https://github.com/llharris/lab-200a/blob/b7149943df2167e6064ee3af8819eb4e49f6f4a5/docker/gitlab/gitlab-ee-compose.yml
+https://github.com/dhtech/kube-sto2/blob/59f759f578dab888089d973a26aa58204e6b9551/gitlab/gitlab-config.yml
+https://github.com/asuc-octo/berkeleytime/blob/3da3ec56bb0ae627fb1f7f4ad511bc80a01546c9/infra/k8s/default/bt-gitlab.yaml
+https://github.com/danmanners/RKE-Learning-2/blob/0b8a020a104f1e6c104fb6ad4d5a9fa8a8d351d8/Gitlab/ingress.yaml
+https://github.com/RihardsT/cloud_project_kubernetes/blob/421cb19276f225707567db9a7573f87dd7268d99/Gitlab/gitlab.yml
 
+
+
+    # registry['internal_key'] = "-----BEGIN PRIVATE KEY-----\nMIIJQwIBADPg2Crk=\n-----END PRIVATE KEY-----\n"
+    registry['internal_key'] = File.read("/reg-auth-cert/auth.key")
+    gitlab_rails['registry_host'] = "reg.dev-srv.home.lan"
+    # gitlab_rails['registry_port'] = "5005"
+    # Notification secret, it's used to authenticate notification requests to GitLab application
+    # You only need to change this when you use external Registry service, otherwise
+    # it will be taken directly from notification settings of your Registry
+    # gitlab_rails['registry_notification_secret'] = nil
+    # Нужен ключь в правильном формате
+    # gitlab_rails['internal_key'] = "/reg-auth-cert/auth.key"
+
+
+curl --silent --user root:secret_pass -G https://gitlab.dev-srv.home.lan/jwt/auth -d service=container_registry -d scope="gitlab-instance-e4525a73:*:*" | ./jq -r '.token')
+Command 2: curl -H "Authorization: Bearer ${TOKEN}" ${REGISTRY}v2/group/module/tags/list
+Command 3: curl -H "Authorization: Bearer ${TOKEN}" -X "DELETE" {$REGISTRY}v2/group/module/blobs/sha256:xxx
+
+
+curl --user 'root:secret_pass' 'https://gitlab.dev-srv.home.lan/jwt/auth?client_id=docker&offline_token=true&service=container_registry&scope=repository:gitlab-instance-e4525a73:push,pull'

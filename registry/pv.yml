@@ -40,7 +40,7 @@ spec:
     - ReadWriteOnce
   storageClassName: registry-data-storage
   nfs:
-    server: 10.43.134.89
+    server: 10.43.120.84
     path: "/gitlab/registry_data"
   mountOptions:
     - nfsvers=4.2

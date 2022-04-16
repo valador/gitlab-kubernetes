@@ -23,7 +23,7 @@ spec:
     group: cert-manager.io
   subject:
     countries: [RU]
-    organizations: [Widget Co]
+    organizations: [XAOC Co]
     organizationalUnits: [DevOps, Gitlab]
   dnsNames:
     - gitlab.dev-srv.home.lan
