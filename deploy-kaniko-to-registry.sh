@@ -5,7 +5,7 @@
 
 #IP=$(multipass info ${node1_name} | grep IPv4 | awk '{print $2}')
 
-image_name_to_pull="gcr.io/kaniko-project/executor:debug"
+image_name_to_pull="postgres:latest"
 image_name_new="root/kaniko-project/executor:debug"
 registry_domain="reg.dev-srv.home.lan"
 
