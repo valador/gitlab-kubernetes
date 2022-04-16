@@ -28,10 +28,6 @@ data:
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
     }
-    # nginx['proxy_set_headers'] = {
-    #   "X-Forwarded-Proto" => "http",
-    #   "CUSTOM_HEADER" => "VALUE"
-    # }
     
     # Backup
     gitlab_rails['backup_path'] = '/mnt/backups'
@@ -66,48 +62,39 @@ data:
     gitlab_rails['redis_port'] = '6379'
     
     # Registry
-    # HTTPS addr need for work
+    # For internal registry
     # registry_external_url 'https://reg.dev-srv.home.lan'
     gitlab_rails['registry_enabled'] = true
     gitlab_rails['registry_api_url'] = "http://docker-registry-svc:5000"
     gitlab_rails['registry_issuer'] = "gitlab-issuer"
+    # Key for comunicate with external registry
     registry['internal_key'] = File.read("/reg-auth-cert/reg-auth.key")
     # Store generated\added key for registry
     gitlab_rails['registry_key_path'] = "/gitlab-data/gitlab-registry.key"
-    # gitlab_rails['internal_key'] = "/reg-auth-cert/reg-auth.key"
     # For internal registry
     #registry['internal_certificate'] = File.read("/reg-auth-cert/reg-auth.crt")
+    # Disable internal registry, we use external
     registry['enable'] = false
+    # For page "Container Registry" in project
     gitlab_rails['registry_host'] = "reg.dev-srv.home.lan"
     # gitlab_rails['registry_port'] = "5005"
+    # For internal registry
     # registry_nginx['listen_port'] = 5005
     registry_nginx['listen_https'] = false
     # registry_nginx['redirect_http_to_https'] = false
-    # registry_nginx['enable'] = false
     registry_nginx['proxy_set_headers'] = {
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
     }
-    # registry_nginx['proxy_set_headers'] = {
-    #   "X-Forwarded-Proto" => "http",
-    #   "CUSTOM_HEADER" => "VALUE"
-    # }
-    # registry_nginx['proxy_set_headers'] = { 
-    #   "Host" => "$http_host", 
-    #   "X-Real-IP" => "$remote_addr", 
-    #   "X-Forwarded-For" => "$proxy_add_x_forwarded_for", 
-    #   "X-Forwarded-Proto" => "https", 
-    #   "X-Forwarded-Ssl" => "on"
-    #   }
-    # registry['notifications'] = [
-    #   {
-    #     'name' => 'registry_endpoint',
-    #     'url' => 'http://gitlab-svc/notify',
-    #     'timeout' => '500ms',
-    #     'threshold' => 5,
-    #     'backoff' => '1s',
-    #     'headers' => {
-    #       "Authorization" => ["UBER_TOKEN"]
-    #     }
-    #   }
-    # ]
+    registry['notifications'] = [
+      {
+        'name' => 'registry_endpoint',
+        'url' => 'http://gitlab-svc/notify',
+        'timeout' => '500ms',
+        'threshold' => 5,
+        'backoff' => '1s',
+        'headers' => {
+          "Authorization" => ["UBER_TOKEN"]
+        }
+      }
+    ]
