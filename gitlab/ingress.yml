@@ -78,6 +78,13 @@ spec:
       # middlewares:
       #   - name: https-redirectscheme
       #     namespace: gitlab
+    - match: Host(`pages.dev-srv.home.lan`) && (PathPrefix(`/`))
+      kind: Rule
+      services:
+        - name: gitlab-svc
+          namespace: gitlab
+          kind: Service
+          port: 8090
     - match: Host(`reg.dev-srv.home.lan`) && (PathPrefix(`/`))
       kind: Rule
       services:

@@ -26,8 +26,9 @@ spec:
     organizations: [XAOC Co]
     organizationalUnits: [DevOps, Gitlab]
   dnsNames:
-    - gitlab.dev-srv.home.lan
-    - reg.dev-srv.home.lan
+    - "*.dev-srv.home.lan"
+    # - gitlab.dev-srv.home.lan
+    # - reg.dev-srv.home.lan
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer

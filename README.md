@@ -26,8 +26,7 @@
     sudo kubectl apply -f ./base/gitlab-admin-service-account.yaml
     ```
 
-5. Создаем ключь и сертификат для связи гитлаба с реестром, gitlab_rails['internal_key'] его хавает - хавает но НЕ работает.
-   Работает конструкция вида registry['internal_key'] = File.read("/reg-auth-cert/auth.key")
+5. Создаем ключь и сертификат для связи гитлаба с реестром, registry['internal_key'] = File.read("/reg-auth-cert/auth.key")
 
     ```BASH
     openssl req -new -newkey rsa:4096 -subj "/CN=gitlab-issuer" -nodes -x509 -keyout ./registry/certs/reg-auth.key -out ./registry/certs/reg-auth.crt
@@ -89,7 +88,7 @@ SELinux
 chcon -Rt svirt_sandbox_file_t /path/to/volume
 
 ```bash
-docker login reg.dev-srv.home.lan -u root -p MJw7xHGBg4uxVB9sK7j6
+docker login reg.dev-srv.home.lan -u root -p 1Nj9tu9PEDN3wxxeF63q
 ```
 
 ### Добавляем самоподписанный сертификат в клиентскую систему
@@ -103,11 +102,16 @@ sudo update-ca-certificates
 ```
 docker push reg.dev-srv.home.lan/root/kaniko-project
 docker build -t reg.dev-srv.home.lan/root/kaniko-project .
+
 [Service]
 Environment="HTTP_PROXY=http://136.144.54.195:10010"
 Environment="HTTPS_PROXY=http://50.205.73.210:3128"
 Environment="NO_PROXY=localhost,127.0.0.1,.lan"
 
+
+export HTTP_PROXY="http://136.144.54.195:10010"
+export HTTPS_PROXY="http://50.205.73.210:3128"
+unset HTTP_PROXY HTTPS_PROXY
 ---
 
 # Registry caps

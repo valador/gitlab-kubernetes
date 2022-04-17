@@ -23,7 +23,7 @@ spec:
       #   runAsGroup: 65534
       #   fsGroup: 65534
       containers:
-        - image: redis:6.2-rc3-alpine
+        - image: redis:alpine
           name: redis
           ports:
             - containerPort: 6379
@@ -41,7 +41,7 @@ spec:
               cpu: 200m
           volumeMounts:
             - name: redis
-              mountPath: /var/lib/redis
+              mountPath: /data
       volumes:
         - name: redis
           persistentVolumeClaim:
