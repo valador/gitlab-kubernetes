@@ -21,23 +21,8 @@ spec:
       - name: gitlab-runner-kubernetes
         image: gitlab/gitlab-runner:v14.9.1
         imagePullPolicy: "IfNotPresent"
-        # lifecycle:
-        #   preStop:
-        #     exec:
-        #       command: ["/entrypoint", "unregister", "--all-runners"]
-        # command: ["/bin/bash", "/scripts/entrypoint"]
         securityContext:
           privileged: true
-        # livenessProbe:
-        #   failureThreshold: 3
-        #   httpGet:
-        #     host: gitlab-svc
-        #     path: /ci
-        #     port: 80
-        #     scheme: HTTP
-        #   periodSeconds: 10
-        #   successThreshold: 1
-        #   timeoutSeconds: 1
         resources:
           limits:
             memory: 500Mi
@@ -45,6 +30,13 @@ spec:
           requests:
             memory: 500Mi
             cpu: 600m
+        volumeMounts:
+          - mountPath: /etc/gitlab-runner/certs
+            name: self-cert2
+            readOnly: true
+          - mountPath: /usr/local/share/ca-certificates
+            name: self-cert
+            readOnly: true
         env:
         - name: CI_SERVER_URL
           value: "http://gitlab-svc/ci"
@@ -70,8 +62,24 @@ spec:
         #   value: "ubuntu:18.04"
         - name: KUBERNETES_POLL_TIMEOUT
           value: "180"
+        - name: FF_GITLAB_REGISTRY_HELPER_IMAGE
+          value: "false"
+        # - name: FEATURE_FLAG_NAME
+        #   value: "1"
+        - name: KUBERNETES_HELPER_IMAGE
+          value: "gitlab/gitlab-runner-helper:x86_64-${CI_RUNNER_REVISION}"
+        # - name: DOCKER_HELPER_IMAGE 
+        #   value: "gitlab/gitlab-runner-helper:x86_64-${CI_RUNNER_REVISION}"
+        # - name: KUBERNETES_CA_FILE
+        #   value: "/usr/local/share/ca-certificates/ca.crt"
+        # FF_USE_LEGACY_KUBERNETES_EXECUTION_STRATEGY=true (exec "$@")
+        # FF_KUBERNETES_HONOR_ENTRYPOINT=true
+        - name: CI_SERVER_TLS_CA_FILE
+          value: "/usr/local/share/ca-certificates/gitlab.dev-srv.home.lan.crt"
+        # - name: REGISTRY_CERT
+        #   value: "/usr/local/share/ca-certificates/gitlab.dev-srv.home.lan.crt"
         command: ["/bin/bash"]
-        args: ["-c", "gitlab-runner register kubernetes; /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --working-directory=/home/gitlab-runner"]
+        args: ["-c", "gitlab-runner register kubernetes; /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --working-directory=/home/gitlab-runner; /usr/sbin/update-ca-certificates --fresh > /dev/null"]
       # - name: gitlab-runner-docker
       #   image: gitlab/gitlab-runner:latest
       #   volumeMounts:
@@ -112,7 +120,19 @@ spec:
       #     value: "10.0.0.10"
       #   command: ["/bin/bash"]
       #   args: ["-c", "gitlab-runner register docker; /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --working-directory=/home/gitlab-runner"]
-      # volumes:
+      volumes:
+        - name: self-cert
+          secret:
+            secretName: root-secret
+            items:
+            - key: tls.crt
+              path: gitlab.dev-srv.home.lan.crt
+        - name: self-cert2
+          secret:
+            secretName: root-secret
+            items:
+            - key: tls.crt
+              path: ca.crt
       #   - name: docker-socket
       #     hostPath:
       #       path: /var/run/docker.sock
