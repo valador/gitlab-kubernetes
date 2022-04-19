@@ -14,7 +14,7 @@ docker pull ${image_name_to_pull}
 docker tag ${image_name_to_pull} ${registry_domain}/${image_name_new}
 docker push ${registry_domain}/${image_name_new}
 
-curl https://${registry_domain}/v2/_catalog
+# curl https://${registry_domain}/v2/_catalog
 #curl http://${registry_domain}:5000/v2/node/tags/list
 #curl http://registry.dev.test:5000/v2/gcr.io/kaniko-project/executor/tags/list
 

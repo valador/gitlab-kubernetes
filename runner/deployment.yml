@@ -15,15 +15,19 @@ spec:
       labels:
         name: gitlab-runner
     spec:
+      serviceAccountName: gitlab-runner
+      restartPolicy: Always
       containers:
       - name: gitlab-runner-kubernetes
-        image: gitlab/gitlab-runner:v14.4.0
-        # volumeMounts:
-        #   - name: docker-socket
-        #     readOnly: false
-        #     mountPath: /var/run/docker.sock
+        image: gitlab/gitlab-runner:v14.9.1
+        imagePullPolicy: "IfNotPresent"
+        # lifecycle:
+        #   preStop:
+        #     exec:
+        #       command: ["/entrypoint", "unregister", "--all-runners"]
+        # command: ["/bin/bash", "/scripts/entrypoint"]
         securityContext:
-          privileged: false
+          privileged: true
         # livenessProbe:
         #   failureThreshold: 3
         #   httpGet:
@@ -52,10 +56,20 @@ spec:
           value: "true"
         - name: RUNNER_EXECUTOR
           value: "kubernetes"
-        - name: RUNNER_TAG_LIST
-          value: "kubernetes"
+        # - name: RUNNER_TAG_LIST # Need enable non-tagged jobs for runner in gitlab settings
+        #   value: "kubernetes"
         - name: KUBERNETES_NAMESPACE
           value: "gitlab"
+        - name: KUBERNETES_PRIVILEGED
+          value: "true"
+        - name: RUNNER_REQUEST_CONCURRENCY
+          value: "1"
+        - name: REGISTER_LOCKED
+          value: "true"
+        # - name: KUBERNETES_IMAGE
+        #   value: "ubuntu:18.04"
+        - name: KUBERNETES_POLL_TIMEOUT
+          value: "180"
         command: ["/bin/bash"]
         args: ["-c", "gitlab-runner register kubernetes; /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --working-directory=/home/gitlab-runner"]
       # - name: gitlab-runner-docker
@@ -98,7 +112,6 @@ spec:
       #     value: "10.0.0.10"
       #   command: ["/bin/bash"]
       #   args: ["-c", "gitlab-runner register docker; /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --working-directory=/home/gitlab-runner"]
-      restartPolicy: Always
       # volumes:
       #   - name: docker-socket
       #     hostPath:
