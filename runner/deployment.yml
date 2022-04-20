@@ -25,11 +25,11 @@ spec:
           privileged: true
         resources:
           limits:
-            memory: 500Mi
-            cpu: 600m
+            memory: 1Gi
+            cpu: 500m
           requests:
-            memory: 500Mi
-            cpu: 600m
+            memory: 65Mi
+            cpu: 250m
         volumeMounts:
           - mountPath: /etc/gitlab-runner/certs
             name: self-cert2
