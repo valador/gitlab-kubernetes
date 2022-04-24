@@ -30,13 +30,31 @@ spec:
           requests:
             memory: 65Mi
             cpu: 250m
+        livenessProbe:
+            exec:
+              command: ["/bin/bash", "/scripts/check-live"]
+            initialDelaySeconds: 60
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+        readinessProbe:
+          exec:
+            command: ["/usr/bin/pgrep","gitlab.*runner"]
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
         volumeMounts:
+          - mountPath: /scripts
+            name: gitlab-runner-conf
           - mountPath: /etc/gitlab-runner/certs
             name: self-cert2
             readOnly: true
           - mountPath: /usr/local/share/ca-certificates
             name: self-cert
-            readOnly: true
+            # readOnly: true
         env:
         - name: CI_SERVER_URL
           value: "http://gitlab-svc/ci"
@@ -121,6 +139,10 @@ spec:
       #   command: ["/bin/bash"]
       #   args: ["-c", "gitlab-runner register docker; /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --working-directory=/home/gitlab-runner"]
       volumes:
+        - name: gitlab-runner-conf
+          configMap:
+            #defaultMode: 0777
+            name: gitlab-runner-conf
         - name: self-cert
           secret:
             secretName: root-secret

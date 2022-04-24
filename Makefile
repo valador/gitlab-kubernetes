@@ -80,11 +80,13 @@ gitlab-purge:
 	sudo rm -rf /mnt/nfs-store/gitlab/*
 .PHONY: gitlab-runner-up gitlab-runner-down
 gitlab-runner-up:
-	sudo kubectl apply -f ./runner/deployment.yml
+	sudo kubectl apply -f ./runner/configmap.yaml
 	sudo kubectl apply -f ./runner/gitlab-runner-admin.yml
+	sudo kubectl apply -f ./runner/deployment.yml
 gitlab-runner-down:
 	sudo kubectl delete -f ./runner/deployment.yml
 	sudo kubectl delete -f ./runner/gitlab-runner-admin.yml
+	sudo kubectl delete -f ./runner/configmap.yaml
 .PHONY: get-all
 get-all:
 	sudo kubectl get all --all-namespaces
