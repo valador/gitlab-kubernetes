@@ -19,7 +19,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: gitlab-runner-kubernetes
-        image: gitlab/gitlab-runner:v14.9.1
+        image: gitlab/gitlab-runner:v15.8.1
         imagePullPolicy: "IfNotPresent"
         securityContext:
           privileged: true
@@ -93,7 +93,7 @@ spec:
         # FF_USE_LEGACY_KUBERNETES_EXECUTION_STRATEGY=true (exec "$@")
         # FF_KUBERNETES_HONOR_ENTRYPOINT=true
         - name: CI_SERVER_TLS_CA_FILE
-          value: "/usr/local/share/ca-certificates/gitlab.dev-srv.home.lan.crt"
+          value: "/usr/local/share/ca-certificates/gitlab.server.lan.crt"
         # - name: REGISTRY_CERT
         #   value: "/usr/local/share/ca-certificates/gitlab.dev-srv.home.lan.crt"
         command: ["/bin/bash"]
@@ -148,7 +148,7 @@ spec:
             secretName: root-secret
             items:
             - key: tls.crt
-              path: gitlab.dev-srv.home.lan.crt
+              path: gitlab.server.lan.crt
         - name: self-cert2
           secret:
             secretName: root-secret

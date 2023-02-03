@@ -17,10 +17,10 @@ spec:
         app: gitlab # has to match .spec.selector.matchLabels
     spec:
       terminationGracePeriodSeconds: 10
-      securityContext:
-        runAsUser: 0
-        # runAsGroup: 1000
-        fsGroup: 0
+      # securityContext:
+      #   runAsUser: 0
+      #   # runAsGroup: 1000
+      #   fsGroup: 0
       containers:
         - name: gitlab
           image: gitlab/gitlab-ce:15.8.1-ce.0

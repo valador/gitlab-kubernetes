@@ -127,3 +127,7 @@ https://github.com/dhtech/kube-sto2/blob/59f759f578dab888089d973a26aa58204e6b955
 https://github.com/asuc-octo/berkeleytime/blob/3da3ec56bb0ae627fb1f7f4ad511bc80a01546c9/infra/k8s/default/bt-gitlab.yaml
 https://github.com/danmanners/RKE-Learning-2/blob/0b8a020a104f1e6c104fb6ad4d5a9fa8a8d351d8/Gitlab/ingress.yaml
 https://github.com/RihardsT/cloud_project_kubernetes/blob/421cb19276f225707567db9a7573f87dd7268d99/Gitlab/gitlab.yml
+
+---
+
+сертификат не пашет с *, генерить wildcat?
