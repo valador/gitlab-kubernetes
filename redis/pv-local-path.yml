@@ -41,7 +41,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   local:
-    path: /gitlab/redis_data
+    path: /mnt/gitlab/redis_data
   nodeAffinity:
     required:
       nodeSelectorTerms:

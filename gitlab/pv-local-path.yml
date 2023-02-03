@@ -41,7 +41,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   local:
-    path: /gitlab/gitlab_etc
+    path: /mnt/gitlab/gitlab_etc
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -64,7 +64,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   local:
-    path: /gitlab/gitlab_git_data
+    path: /mnt/gitlab/gitlab_git_data
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -87,7 +87,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   local:
-    path: /gitlab/gitlab_uploads_data
+    path: /mnt/gitlab/gitlab_uploads_data
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -110,7 +110,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   local:
-    path: /gitlab/gitlab_shared_data
+    path: /mnt/gitlab/gitlab_shared_data
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -123,7 +123,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: gitlab-builds-data
+  name: gitlab-builds-data-pv
   namespace: gitlab
 spec:
   capacity:
@@ -133,7 +133,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   local:
-    path: /gitlab/gitlab_builds_data
+    path: /mnt/gitlab/gitlab_builds_data
   nodeAffinity:
     required:
       nodeSelectorTerms:

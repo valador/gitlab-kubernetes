@@ -23,7 +23,7 @@ spec:
         fsGroup: 0
       containers:
         - name: gitlab
-          image: gitlab/gitlab-ce:14.9.3-ce.0
+          image: gitlab/gitlab-ce:15.8.1-ce.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http-web

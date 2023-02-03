@@ -41,7 +41,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   local:
-    path: /gitlab/postgres_data
+    path: /mnt/gitlab/postgres_data
   nodeAffinity:
     required:
       nodeSelectorTerms:
