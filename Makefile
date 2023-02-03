@@ -5,13 +5,13 @@ SHELL := /bin/bash
 .PHONY: help
 help:
 	make -pRrq -f $(THIS_FILE) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
-.PHONY: gitlab-nfs-mkdir
-gitlab-nfs-mkdir:
+.PHONY: gitlab-mkdir
+gitlab-mkdir:
 	# Gitlab
 	# sudo mkdir -p /mnt/nfs-store/gitlab
 	# sudo chown nobody.nobody /mnt/nfs-store/gitlab
 	# sudo mkdir -p /mnt/nfs-store/gitlab
-	sudo mkdir -p /mnt/nfs-store/gitlab/{gitlab_etc,gitlab_git_data,gitlab_uploads_data,gitlab_shared_data,gitlab_builds_data}
+	sudo mkdir -p /mnt/gitlab/{gitlab_etc,gitlab_git_data,gitlab_uploads_data,gitlab_shared_data,gitlab_builds_data}
 	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_etc
 	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_git_data
 	# sudo mkdir -p /mnt/nfs-store/gitlab/gitlab_uploads_data
@@ -21,18 +21,18 @@ gitlab-nfs-mkdir:
 	# 777 ближе но все равно не то
 	# sudo chmod -R 777 /mnt/nfs-store/gitlab/gitlab_etc
 	# Postgres
-	sudo mkdir -p /mnt/nfs-store/gitlab/postgres_data
+	sudo mkdir -p /mnt/gitlab/postgres_data
 	# sudo chown 70:70 /mnt/nfs-store/gitlab/postgres_data
 	# Redis
-	sudo mkdir -p /mnt/nfs-store/gitlab/redis_data
+	sudo mkdir -p /mnt/gitlab/redis_data
 	# Registry
-	sudo mkdir -p /mnt/nfs-store/gitlab/registry_data
+	sudo mkdir -p /mnt/gitlab/registry_data
 # base gitlab installation
 .PHONY: gitlab-up gitlab-down gitlab-purge
 gitlab-up:
 	# GITLAB
-	sudo kubectl apply -f ./gitlab/pvc.yml
-	sudo kubectl apply -f ./gitlab/pv.yml
+	sudo kubectl apply -f ./gitlab/pvc-local-path.yml
+	sudo kubectl apply -f ./gitlab/pv-local-path.yml
 	sudo kubectl apply -f ./gitlab/omnibus-conf.yml
 	sudo kubectl apply -f ./gitlab/svc.yml
 	sudo kubectl apply -f ./gitlab/deployment.yml
@@ -55,8 +55,8 @@ gitlab-up:
 	sudo kubectl apply -f ./registry/deployment.yaml
 gitlab-down:
 	sudo kubectl delete -f ./gitlab/deployment.yml
-	sudo kubectl delete -f ./gitlab/pvc.yml
-	sudo kubectl delete -f ./gitlab/pv.yml
+	sudo kubectl delete -f ./gitlab/pvc-local-path.yml
+	sudo kubectl delete -f ./gitlab/pv-local-path.yml
 	sudo kubectl delete -f ./gitlab/omnibus-conf.yml
 	sudo kubectl delete -f ./gitlab/svc.yml
 	sudo kubectl delete -f ./gitlab/ingress.yml
@@ -77,7 +77,7 @@ gitlab-down:
 	sudo kubectl delete -f ./registry/svc.yml
 	sudo kubectl delete -f ./registry/pv.yml
 gitlab-purge:
-	sudo rm -rf /mnt/nfs-store/gitlab/*
+	sudo rm -rf /mnt/gitlab/*
 .PHONY: gitlab-runner-up gitlab-runner-down
 gitlab-runner-up:
 	sudo kubectl apply -f ./runner/configmap.yaml

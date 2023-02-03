@@ -68,7 +68,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`gitlab.dev-srv.home.lan`) && (PathPrefix(`/`))
+    - match: Host(`gitlab.server.lan`) && (PathPrefix(`/`))
       kind: Rule
       services:
         - name: gitlab-svc
@@ -78,14 +78,14 @@ spec:
       # middlewares:
       #   - name: https-redirectscheme
       #     namespace: gitlab
-    - match: Host(`pages.dev-srv.home.lan`) && (PathPrefix(`/`))
+    - match: Host(`pages.gitlab.server.lan`) && (PathPrefix(`/`))
       kind: Rule
       services:
         - name: gitlab-svc
           namespace: gitlab
           kind: Service
           port: 8090
-    - match: Host(`reg.dev-srv.home.lan`) && (PathPrefix(`/`))
+    - match: Host(`reg.server.lan`) && (PathPrefix(`/`))
       kind: Rule
       services:
         - name: docker-registry-svc

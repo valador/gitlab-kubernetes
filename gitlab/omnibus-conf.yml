@@ -19,7 +19,7 @@ data:
     
     ## Base
     gitlab_rails['time_zone'] = 'Europe/Moscow'
-    external_url "https://gitlab.dev-srv.home.lan"
+    external_url "https://gitlab.server.lan"
     nginx['enable'] = true
     nginx['listen_port'] = 80
     nginx['listen_https'] = false
@@ -65,7 +65,7 @@ data:
     # gitlab_rails['redis_database'] = 0
 
     ## Pages
-    pages_external_url "http://pages.dev-srv.home.lan/"
+    pages_external_url "http://pages.gitlab.server.lan/"
     gitlab_pages['enable'] = true
     # Set listen-proxy when behind reverse proxy. see https://docs.gitlab.com/ee/administration/pages/#configure-listener-for-reverse-proxy-requests
     gitlab_pages['listen_proxy'] = "0.0.0.0:8090"
@@ -93,7 +93,7 @@ data:
 
     ## Registry
     # For internal registry
-    # registry_external_url 'https://reg.dev-srv.home.lan'
+    # registry_external_url 'https://reg.server.lan'
     gitlab_rails['registry_enabled'] = true
     gitlab_rails['registry_api_url'] = "http://docker-registry-svc:5000"
     gitlab_rails['registry_issuer'] = "gitlab-issuer"
@@ -106,7 +106,7 @@ data:
     # Disable internal registry, we use external
     registry['enable'] = false
     # For page "Container Registry" in project
-    gitlab_rails['registry_host'] = "reg.dev-srv.home.lan"
+    gitlab_rails['registry_host'] = "reg.server.lan"
     # gitlab_rails['registry_port'] = "5005"
     # For internal registry
     # registry_nginx['listen_port'] = 5005

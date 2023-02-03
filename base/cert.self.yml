@@ -26,7 +26,7 @@ spec:
     organizations: [XAOC Co]
     organizationalUnits: [DevOps, Gitlab]
   dnsNames:
-    - "*.dev-srv.home.lan"
+    - "*.gitlab.server.lan"
     # - gitlab.dev-srv.home.lan
     # - reg.dev-srv.home.lan
 ---
