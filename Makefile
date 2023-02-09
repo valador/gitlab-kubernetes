@@ -51,7 +51,7 @@ gitlab-up:
 	sudo kubectl apply -f ./registry/pv-local-path.yml
 	sudo kubectl apply -f ./registry/pvc-local-path.yml
 	sudo kubectl apply -f ./registry/svc.yml
-	sudo kubectl apply -f ./registry/notifications-conf.yml
+#sudo kubectl apply -f ./registry/notifications-conf.yml
 	sudo kubectl apply -f ./registry/deployment.yaml
 gitlab-down:
 	sudo kubectl delete -f ./gitlab/deployment.yml
@@ -72,12 +72,25 @@ gitlab-down:
 	sudo kubectl delete -f ./redis/pv-local-path.yml
 # Registry
 	sudo kubectl delete -f ./registry/deployment.yaml
-	sudo kubectl delete -f ./registry/notifications-conf.yml
+#sudo kubectl delete -f ./registry/notifications-conf.yml
 	sudo kubectl delete -f ./registry/pvc-local-path.yml
 	sudo kubectl delete -f ./registry/svc.yml
 	sudo kubectl delete -f ./registry/pv-local-path.yml
 gitlab-purge:
 	sudo rm -rf /mnt/gitlab/*
+.PHONY: registry-up registry-down
+registry-up:
+	sudo kubectl apply -f ./registry/pv-local-path.yml
+	sudo kubectl apply -f ./registry/pvc-local-path.yml
+	sudo kubectl apply -f ./registry/svc.yml
+	sudo kubectl apply -f ./registry/notifications-conf.yml
+	sudo kubectl apply -f ./registry/deployment.yaml
+registry-down:
+	sudo kubectl delete -f ./registry/deployment.yaml
+	sudo kubectl delete -f ./registry/notifications-conf.yml
+	sudo kubectl delete -f ./registry/pvc-local-path.yml
+	sudo kubectl delete -f ./registry/svc.yml
+	sudo kubectl delete -f ./registry/pv-local-path.yml
 .PHONY: gitlab-runner-up gitlab-runner-down
 gitlab-runner-up:
 	sudo kubectl apply -f ./runner/configmap.yaml

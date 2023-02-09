@@ -8,9 +8,9 @@ metadata:
 data:
   registry_notifications: |
     - name: registry_endpoint
-      url: http://gitlab-svc/notify
+      url: http://gitlab-svc/notify'
       headers:
-        Authorization: [Bearer UBER_TOKEN]
+        Authorization: ['Yf2_p3iUQYUQbyH-rubPPyP8dpCZkQzA']
       timeout: 500ms
       threshold: 5
       backoff: 1s

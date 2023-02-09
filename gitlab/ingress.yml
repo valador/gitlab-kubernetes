@@ -1,62 +1,3 @@
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: gitlab-ing
-#   namespace: gitlab
-#   labels:
-#     app: gitlab
-#   annotations:
-#     # создает .key автоматически
-#     # cert-manager.io/cluster-issuer: selfsigned-issuer
-#     # cert-manager.io/issuer: gitlab-ca-issuer
-#     traefik.ingress.kubernetes.io/redirect-entry-point: https
-#     kubernetes.io/ingress.class: traefik
-
-# spec:
-#   rules:
-#   - host: gitlab.dev-srv.home.lan
-#     http:
-#       paths:
-#       - pathType: Prefix
-#         path: "/"
-#         backend:
-#           service:
-#             name: gitlab-svc
-#             port:
-#               number: 80
-#   - host: reg.dev-srv.home.lan
-#     http:
-#       paths:
-#       - pathType: Prefix
-#         path: "/"
-#         backend:
-#           service:
-#             name: gitlab-svc
-#             port:
-#               number: 5005
-#   tls:
-#     - hosts:
-#         - "gitlab.dev-srv.home.lan"
-#         - "reg.dev-srv.home.lan"
-#       secretName: root-secret
-# apiVersion: traefik.containo.us/v1alpha1
-# kind: Middleware
-# metadata:
-#   name: https-redirectscheme
-#   namespace: gitlab
-# spec:
-#   redirectScheme:
-#     scheme: https
-#     permanent: false
-# ---
-# apiVersion: traefik.containo.us/v1alpha1
-# kind: Middleware
-# metadata:
-#   name: x-forwarded-for
-# spec:
-#   headers:
-#     hostsProxyHeaders: [ "X-Forwarded-For" ]
----
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -85,7 +26,7 @@ spec:
           namespace: gitlab
           kind: Service
           port: 8090
-    - match: Host(`reg.server.lan`) && (PathPrefix(`/`))
+    - match: Host(`reg.gitlab.server.lan`) && (PathPrefix(`/`))
       kind: Rule
       services:
         - name: docker-registry-svc

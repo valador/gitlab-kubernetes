@@ -93,7 +93,7 @@ data:
 
     ## Registry
     # For internal registry
-    # registry_external_url 'https://reg.server.lan'
+    # registry_external_url 'https://reg.gitlab.server.lan'
     gitlab_rails['registry_enabled'] = true
     gitlab_rails['registry_api_url'] = "http://docker-registry-svc:5000"
     gitlab_rails['registry_issuer'] = "gitlab-issuer"
@@ -106,7 +106,7 @@ data:
     # Disable internal registry, we use external
     registry['enable'] = false
     # For page "Container Registry" in project
-    gitlab_rails['registry_host'] = "reg.server.lan"
+    gitlab_rails['registry_host'] = "reg.gitlab.server.lan"
     # gitlab_rails['registry_port'] = "5005"
     # For internal registry
     # registry_nginx['listen_port'] = 5005
@@ -116,15 +116,16 @@ data:
       'X-Forwarded-Proto' => 'https',
       'X-Forwarded-Ssl' => 'on'
     }
-    registry['notifications'] = [
-      {
-        'name' => 'registry_endpoint',
-        'url' => 'http://gitlab-svc/notify',
-        'timeout' => '500ms',
-        'threshold' => 5,
-        'backoff' => '1s',
-        'headers' => {
-          "Authorization" => ["UBER_TOKEN"]
-        }
-      }
-    ]
+    gitlab_rails['registry_notification_secret'] = "Yf2_p3iUQYUQbyH-rubPPyP8dpCZkQzA"
+    # registry['notifications'] = [
+    #   {
+    #     'name' => 'registry_endpoint',
+    #     'url' => 'https://gitlab.server.lan/notify2',
+    #     'timeout' => '500ms',
+    #     'threshold' => 5,
+    #     'backoff' => '1s',
+    #     'headers' => {
+    #       "Authorization" => ["Yf2_p3iUQYUQbyH-rubPPyP8dpCZkQzA"]
+    #     }
+    #   }
+    # ]

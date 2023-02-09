@@ -17,7 +17,7 @@
 3. Выпускаем сертификат
 
     ```BASH
-    sudo kubectl apply -f ./base/cert.self.yml
+    sudo kubectl apply -f ./base/cert.self-wildcard.yml
     ```
 
 4. Создаем аккаунт админа кластера
@@ -88,20 +88,26 @@ SELinux
 chcon -Rt svirt_sandbox_file_t /path/to/volume
 
 ```bash
-docker login reg.dev-srv.home.lan -u root -p 1Nj9tu9PEDN3wxxeF63q
+docker login reg.gitlab.server.lan -u root -p glpat-N-13PL9MmTw_Hq5SKqUX
 ```
 
 ### Добавляем самоподписанный сертификат в клиентскую систему
 
 ```bash
 sudo kubectl -n gitlab get secret root-secret -o json | jq -r '.data["tls.crt"]' | base64 -d > ca.crt
-sudo mkdir -p /etc/docker/certs.d/reg.dev-srv.home.lan
-sudo cp ca.crt /etc/docker/certs.d/reg.dev-srv.home.lan/ca.crt
+sudo mkdir -p /etc/docker/certs.d/reg.gitlab.server.lan
+sudo cp ca.crt /etc/docker/certs.d/reg.gitlab.server.lan/ca.crt
 sudo cp ca.crt /usr/local/share/ca-certificates/ca.crt
 sudo update-ca-certificates
 ```
-docker push reg.dev-srv.home.lan/root/kaniko-project
-docker build -t reg.dev-srv.home.lan/root/kaniko-project .
+docker push reg.gitlab.server.lan/root/kaniko-project
+docker build -t reg.gitlab.server.lan/root/kaniko-project .
+
+---
+token for notifications
+`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c 32 | sed "s/^[0-9]*//"; echo`
+---
+
 
 [Service]
 Environment="HTTP_PROXY=http://136.144.54.195:10010"
@@ -130,4 +136,54 @@ https://github.com/RihardsT/cloud_project_kubernetes/blob/421cb19276f225707567db
 
 ---
 
-сертификат не пашет с *, генерить wildcat?
+## Taking a backup
+
+```shell
+POSTGRES_POD=$(kubectl get pod -n gitlab -l k8s-app=postgres -o jsonpath={.items[0].metadata.name})
+GITLAB_POD=$(kubectl get pod -n gitlab -l k8s-app=gitlab -o jsonpath={.items[0].metadata.name})
+kubectl exec -n gitlab "${POSTGRES_POD}" -- su postgres -c pg_dumpall > backup.sql
+kubectl exec -n gitlab "${GITLAB_POD}" -- gitlab-rake gitlab:backup:create SKIP=db
+BACKUP=$(kubectl exec -n gitlab "${GITLAB_POD}" -- /bin/bash -c 'ls -tr /var/opt/gitlab/backups/*.tar | tail -n 1')
+kubectl exec -n gitlab "${GITLAB_POD}" -- cat "${BACKUP}" > backup.tar
+```
+
+---
+## ca fo runner
+```
+ - name: gitlab-runner.runners.config
+          value: |
+            [[runners]]
+              [runners.kubernetes]
+                image = "ubuntu:20.04"
+                # privileged = true
+                # allow_privilege_escalation = true
+                # image_pull_secrets = ["docker-registry-credentials", "optional-additional-credentials"]
+                # allowed_images = ["ruby:*", "python:*", "php:*"]
+                # allowed_services = ["postgres:9.4", "postgres:latest"]
+                # pre_build_script = """
+                # apk update >/dev/null
+                # apk add ca-certificates >/dev/null
+                # rm -rf /var/cache/apk/*
+                # cp /etc/gitlab-runner/certs/ca.crt /usr/local/share/ca-certificates/ca.crt
+                # update-ca-certificates --fresh > /dev/null
+                # """
+                [runners.kubernetes.volumes]
+                  [[runners.kubernetes.volumes.secret]]
+                    name = "gitlab-tls-ca-key-pair"
+                    mount_path = "/etc/gitlab-runner/certs/"
+                    read_only = true
+                    [runners.kubernetes.volumes.secret.items]
+                      "tls.crt" = "ca.crt"
+              [runners.cache]
+                Type = "s3"
+                Path = "gitlab-runner"
+                Shared = true
+                [runners.cache.s3]
+                  # ServerAddress = "minio.gitlab.gigix"
+                  # Insecure = false
+                  ServerAddress = "gitlab-minio-svc:9000"
+                  Insecure = true
+                  BucketName = "runner-cache"
+                  BucketLocation = "us-east-1"
+```
+---
