@@ -35,8 +35,8 @@ spec:
   selector:
     app: gitlab
   ports:
-    - name: ssh
+    - name: tcp-ssh
       protocol: "TCP"
       port: 32222
-      targetPort: 22
+      targetPort: 32222
   type: ClusterIP

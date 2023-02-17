@@ -88,16 +88,16 @@ SELinux
 chcon -Rt svirt_sandbox_file_t /path/to/volume
 
 ```bash
-docker login reg.gitlab.server.lan -u root -p glpat-N-13PL9MmTw_Hq5SKqUX
+docker login reg.gitlab.server.lan -u root -p glpat-aZwydHGLgs7fkGoqVXvL
 ```
 
 ### Добавляем самоподписанный сертификат в клиентскую систему
 
 ```bash
-sudo kubectl -n gitlab get secret root-secret -o json | jq -r '.data["tls.crt"]' | base64 -d > ca.crt
+sudo kubectl -n gitlab get secret root-secret -o json | jq -r '.data["tls.crt"]' | base64 -d > gitlab.server.lan.crt
 sudo mkdir -p /etc/docker/certs.d/reg.gitlab.server.lan
-sudo cp ca.crt /etc/docker/certs.d/reg.gitlab.server.lan/ca.crt
-sudo cp ca.crt /usr/local/share/ca-certificates/ca.crt
+sudo cp ca.crt /etc/docker/certs.d/reg.gitlab.server.lan/gitlab.server.lan.crt
+sudo cp ca.crt /usr/local/share/ca-certificates/gitlab.server.lan.crt
 sudo update-ca-certificates
 ```
 docker push reg.gitlab.server.lan/root/kaniko-project
@@ -186,4 +186,11 @@ kubectl exec -n gitlab "${GITLAB_POD}" -- cat "${BACKUP}" > backup.tar
                   BucketName = "runner-cache"
                   BucketLocation = "us-east-1"
 ```
+
 ---
+Git SSL verification
+
+By default, GitLab CI jobs will verify certificates when checking out a Git project. Verification will fail if GitLab is using a self-signed certificate. To disable SSL verification, add this configuration to your project’s .gitlab-ci.yml:
+
+variables:
+  GIT_SSL_NO_VERIFY: "1"

@@ -65,16 +65,21 @@ data:
     # gitlab_rails['redis_database'] = 0
 
     ## Pages
-    pages_external_url "https://pages.gitlab.server.lan/"
+    # not a subdomain of external_url
+    pages_external_url "https://pages.server.lan/"
     gitlab_pages['enable'] = true
     # Set listen-proxy when behind reverse proxy. see https://docs.gitlab.com/ee/administration/pages/#configure-listener-for-reverse-proxy-requests
-    gitlab_pages['listen_proxy'] = "0.0.0.0:8090"
-    # pages_nginx['listen_port'] = 8090
+    # gitlab_pages['listen_proxy'] = "0.0.0.0:8090"
+    pages_nginx['listen_port'] = 8090
     pages_nginx['listen_https'] = false
     # Conflict with chroot, see docs in Gitlab
     # gitlab_pages['access_control'] = true
     # Required due to https://gitlab.com/gitlab-org/gitlab-pages/issues/129
     # gitlab_pages['inplace_chroot'] = true
+    pages_nginx['proxy_set_headers'] = {
+      'X-Forwarded-Proto' => 'https',
+      'X-Forwarded-Ssl' => 'on'
+    }
 
     ## Sidekiq, required for emails and other stuff to work
     sidekiq['enable'] = true

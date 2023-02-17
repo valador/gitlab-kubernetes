@@ -11,15 +11,16 @@ metadata:
   name: gitlab-selfsigned-ca
   namespace: gitlab
 spec:
-  isCA: true
   commonName: gitlab-selfsigned-ca
   secretName: root-secret
-  #duration: 1h # 2880h(120d)
-  #renewBefore: 30m # 360h(15d)
+  duration: 2880h # 2880h(120d)
+  renewBefore: 30m # 360h(15d)
   isCA: true
   privateKey:
     algorithm: ECDSA
+    encoding: PKCS1
     size: 256
+    rotationPolicy: Always
   issuerRef:
     name: selfsigned-issuer
     kind: ClusterIssuer
@@ -33,8 +34,8 @@ spec:
     - client auth
   dnsNames:
     - gitlab.server.lan
-    - "*.gitlab.server.lan"
-    # - reg.dev-srv.home.lan
+    - pages.server.lan
+    - reg.gitlab.server.lan
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
