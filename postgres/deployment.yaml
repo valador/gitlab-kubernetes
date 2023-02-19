@@ -36,10 +36,20 @@ spec:
             value: gitlab
           - name: PGDATA
             value: /var/lib/postgresql/data/pgdata
-        securityContext:
-          capabilities:
-            add: 
-              - SYS_ADMIN
+        # securityContext:
+        #   capabilities:
+        #     add: 
+        #       - SYS_ADMIN
+        readinessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 10
+          periodSeconds: 20
         volumeMounts:
           - name: postgres-data
             # subPath: pgdata

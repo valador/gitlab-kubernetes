@@ -96,6 +96,9 @@ data:
     sidekiq['listen_address'] = "localhost"
     sidekiq['listen_port'] = 8082
 
+    #monitoring
+    gitlab_rails['monitoring_whitelist'] = ['0.0.0.0/0']
+
     ## Registry
     # For internal registry
     # registry_external_url 'https://reg.gitlab.server.lan'

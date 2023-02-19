@@ -28,17 +28,28 @@ spec:
           ports:
             - containerPort: 6379
               name: redis
-          securityContext:
-            capabilities:
-              add: 
-                - SYS_ADMIN
+          # securityContext:
+            # capabilities:
+            #   add: 
+            #     - SYS_ADMIN
+          env:
+            - name: REDIS_REPLICATION_MODE
+              value: master
           resources:
-            limits:
-              memory: 512Mi
-              cpu: 500m
             requests:
-              memory: 256Mi
+              memory: 50Mi
               cpu: 200m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+          readinessProbe:
+            periodSeconds: 5
+            tcpSocket:
+              port: 6379
+          livenessProbe:
+            periodSeconds: 5
+            tcpSocket:
+              port: 6379
           volumeMounts:
             - name: redis
               mountPath: /data

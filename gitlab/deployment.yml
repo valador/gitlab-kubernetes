@@ -41,37 +41,37 @@ spec:
                   name: gitlab-omnibus
                   key: gitlab_omnibus_config
           securityContext:
-            privileged: true
+            privileged: false
             # capabilities:
             #   add: 
             #     - SYS_ADMIN
-          # livenessProbe:
-          #   httpGet:
-          #     path: /help
-          #     port: http
-          #   # This pod takes a very long time to start up. Be cautious when
-          #   # lowering this value to avoid Pod death during startup.
-          #   initialDelaySeconds: 200
-          #   timeoutSeconds: 15
-          #   periodSeconds: 10
-          #   successThreshold: 1
-          #   failureThreshold: 10
-          # readinessProbe:
-          #   httpGet:
-          #     path: /help
-          #     port: http-web
-          #   initialDelaySeconds: 60
-          #   timeoutSeconds: 1
-          #   periodSeconds: 10
-          #   successThreshold: 1
-          #   failureThreshold: 3
-          # resources:
-          #   limits:
-          #     memory: 3000Mi
-          #     # cpu: 800m
-          #   requests:
-          #     memory: 2000Mi
-          #     # cpu: 600m
+          livenessProbe:
+            httpGet:
+              path: /-/liveness
+              port: 80
+            # This pod takes a very long time to start up. Be cautious when
+            # lowering this value to avoid Pod death during startup.
+            initialDelaySeconds: 200
+            timeoutSeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /-/readiness
+              port: 80
+            initialDelaySeconds: 200
+            timeoutSeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
+          resources:
+            requests:
+              memory: 1500Mi
+              cpu: 500m
+            limits:
+              memory: 3000Mi
+              cpu: 2000m
           volumeMounts:
             - name: reg-cert
               mountPath: /reg-auth-cert
