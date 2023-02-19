@@ -18,7 +18,7 @@ spec:
   isCA: true
   privateKey:
     algorithm: ECDSA
-    encoding: PKCS1
+    # encoding: PKCS1
     size: 256
     rotationPolicy: Always
   issuerRef:
@@ -28,13 +28,14 @@ spec:
   subject:
     countries: [RU]
     organizations: [XAOC Co]
-    organizationalUnits: [DevOps, Gitlab]
-  usages:
-    - server auth
-    - client auth
+    organizationalUnits: [DevOps Gitlab]
+  # usages:
+  #   - server auth
+  #   - client auth
   dnsNames:
     - gitlab.server.lan
     - pages.server.lan
+    - "*.pages.server.lan"
     - reg.gitlab.server.lan
 ---
 apiVersion: cert-manager.io/v1

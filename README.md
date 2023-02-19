@@ -96,8 +96,8 @@ docker login reg.gitlab.server.lan -u root -p glpat-aZwydHGLgs7fkGoqVXvL
 ```bash
 sudo kubectl -n gitlab get secret root-secret -o json | jq -r '.data["tls.crt"]' | base64 -d > gitlab.server.lan.crt
 sudo mkdir -p /etc/docker/certs.d/reg.gitlab.server.lan
-sudo cp ca.crt /etc/docker/certs.d/reg.gitlab.server.lan/gitlab.server.lan.crt
-sudo cp ca.crt /usr/local/share/ca-certificates/gitlab.server.lan.crt
+sudo cp gitlab.server.lan.crt /etc/docker/certs.d/reg.gitlab.server.lan/gitlab.server.lan.crt
+sudo cp gitlab.server.lan.crt /usr/local/share/ca-certificates/gitlab.server.lan.crt
 sudo update-ca-certificates
 ```
 docker push reg.gitlab.server.lan/root/kaniko-project
